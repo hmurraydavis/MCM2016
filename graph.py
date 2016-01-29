@@ -22,5 +22,6 @@ graph.add_edges( waterRoutes )
 
 
 
-layout = graph.layout("kamada_kawai")
-igraph.plot(graph, layout = layout)
+#layout = graph.layout("kamada_kawai")
+layout = graph.layout("auto")
+igraph.plot(graph, bbox=(0, 0, 1000, 1000), layout = layout)
