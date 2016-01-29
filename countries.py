@@ -68,7 +68,6 @@ def contiguousBorders(countries):
         (countries['Italy'], countries['Austria']),
         (countries['Italy'], countries['Switzerland']),
         (countries['Italy'], countries['France']),
-        (countries['Malta'], countries['Italy']),
         (countries['Switzerland'], countries['Austria']),
         (countries['Switzerland'], countries['Germany']),
         (countries['Switzerland'], countries['France']),
@@ -78,6 +77,7 @@ def contiguousBorders(countries):
         (countries['Germany'], countries['Belgium']),
         (countries['Germany'], countries['Switzerland']),
         (countries['Austria'], countries['Germany']),
+        (countries['Austria'], countries['Switzerland']),
         (countries['Czech Republic'], countries['Poland']), ## ??
         (countries['Czech Republic'], countries['Germany']),
         (countries['Czech Republic'], countries['Austria']),
@@ -127,6 +127,7 @@ def waterRoutes(countries):
         (countries['Algeria'], countries['France']),
         (countries['Algeria'], countries['Spain']),
         (countries['Morocco'], countries['Spain']),
+        (countries['Malta'], countries['Italy']),
         (countries['France'], countries['UK']),
         (countries['Poland'], countries['Sweden']),
         (countries['Poland'], countries['Finland']),
