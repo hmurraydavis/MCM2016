@@ -141,9 +141,70 @@ def waterRoutes(countries):
         (countries['Norway'], countries['Denmark'])  ]  ##,
         #(countries[''], countries['']),
     return waterRoutes
+    
+def africaCountries():
+    return [ 'Morocco',
+        'Algeria',
+        'Tunisia', 
+        'Libya',
+        'Egypt'
+    ]
+    
+def middleEastCountries():
+    return [ 'Israel',
+        'Jordan',
+        'Lebanon',
+        'Syria'
+    ]
+    
+    
+def nordicCountries():
+    return ['Denmark',
+        'Norway',
+        'Sweden',
+        'Finland'
+    ]
+    
+def westernEuropeCountries():
+    return ['France',
+        'Belgium',
+        'Netherlands',
+        'Germany',
+        'Switzerland',
+        'Austria',
+        'UK'
+    ]
+    
+def centralEuropeCountries():
+    return ['Slovenia',
+        'Czech Republic',
+        'Poland',
+        'Bulgaria',
+        'Romania',
+        'Hungary',
+        'Slovakia'
+    ]
+    
+def southernEuropeCountries():
+    return ['Portugal',
+        'Spain',
+        'Italy',
+        'Slovenia',
+        'Croatia',
+        'Bosnia',
+        'Montenegro',
+        'Albania',
+        'Greece',
+        'Serbia',
+        'Turkey',
+        'Malta',
+        'Macedonia'
+    ]
+
+
 
     
 
 if __name__ == '__main__':
     countries = countries()
-    print edges(countries)
+    print contiguousBorders(countries)
