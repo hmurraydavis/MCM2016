@@ -3,25 +3,25 @@ import countries as COS
 
 
 countryDict = COS.countries()
-countryKeys = countryDict.keys()
 contiguousBorders = COS.contiguousBorders(countryDict)
 waterRoutes = COS.waterRoutes(countryDict)
 
 
-graph = igraph.Graph()
+
+graph = igraph.Graph(vertex_attrs={"label": COS.coList()}, edges=contiguousBorders, directed=True)
 ## graph.is_directed()
-graph.add_vertices( len(countryDict) )
+#graph.add_vertices( len(countryDict) )
 
-## Add vertex labels:
-for key in countryKeys:
-    graph.vs[countryDict[key]]['label'] = key
-    graph.vs[countryDict[key]]['p_death'] = 4
+### Add vertex labels:
+#for key in countryKeys:
+#    graph.vs[countryDict[key]]['label'] = key
+#    graph.vs[countryDict[key]]['p_death'] = 4
 
-graph.vs['label_size'] = 45 ## Set fount size
+graph.vs['label_size'] = 8 ## Set fount size
 graph.vs['shape'] = 'circle'
 
-## Add edges for borders and boats:
-graph.add_edges( contiguousBorders )
+### Add edges for borders and boats:
+#graph.add_edges( contiguousBorders )
 graph.es[0:len(contiguousBorders)]["color"] = "yellow"
 graph.add_edges( waterRoutes )
 
@@ -46,22 +46,19 @@ for vertexNumber in range(len(countryDict)):
         print 'WARNING: No color specified for: ',graph.vs[vertexNumber]['label']
 
 
-graph.es['weight'] = range(0,40)
-#graph.es['edge_arrow_size'] = .2
-#graph.es['edge_arrow_width'] = .2
 
-layout = graph.layout("auto")
+#layout = graph.layout("auto")
 
-graph = graph.as_directed()
-visual_style = { "edge_width":6,
+#graph = graph.as_directed()
+#visual_style = { "edge_width":6,
 #    'edge_arrow_size':.2,
 #    'edge_arrow_width':.2,
-    "vertex_size": 255, 
-    'bbox':(0, 0, 3300, 3300),
-    'layout': layout,
-    'margin': 168 }
+#    "vertex_size": 255, 
+#    'bbox':(0, 0, 3300, 3300),
+#    'layout': layout,
+#    'margin': 168 }
 
-#layout = graph.layout("kamada_kawai")
-#graph.es[4].draw_directed_edge()
+##layout = graph.layout("kamada_kawai")
 
-igraph.plot(graph,  **visual_style)
+
+igraph.plot(graph)#,  **visual_style)
