@@ -14,11 +14,12 @@ graph.add_vertices( len(countryDict) )
 ## Add vertex labels:
 for key in countryKeys:
     graph.vs[countryDict[key]]['label'] = key
+    graph.vs[countryDict[key]]['p_death'] = 4
 
 ## Add edges for borders and boats:
 graph.add_edges( contiguousBorders )
+graph.es[0:len(contiguousBorders)]["color"] = "yellow"
 graph.add_edges( waterRoutes )
-
 
 
 
