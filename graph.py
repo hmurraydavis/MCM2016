@@ -9,6 +9,7 @@ waterRoutes = COS.waterRoutes(countryDict)
 
 
 graph = igraph.Graph()
+## graph.is_directed()
 graph.add_vertices( len(countryDict) )
 
 ## Add vertex labels:
@@ -16,7 +17,7 @@ for key in countryKeys:
     graph.vs[countryDict[key]]['label'] = key
     graph.vs[countryDict[key]]['p_death'] = 4
 
-graph.vs['label_size'] = 40 ## Set fount size
+graph.vs['label_size'] = 45 ## Set fount size
 graph.vs['shape'] = 'circle'
 
 ## Add edges for borders and boats:
@@ -46,15 +47,21 @@ for vertexNumber in range(len(countryDict)):
 
 
 graph.es['weight'] = range(0,40)
+#graph.es['edge_arrow_size'] = .2
+#graph.es['edge_arrow_width'] = .2
 
 layout = graph.layout("auto")
 
+graph = graph.as_directed()
 visual_style = { "edge_width":6,
-    "vertex_size": 95, 
-    'bbox':(0, 0, 2300, 2300),
+#    'edge_arrow_size':.2,
+#    'edge_arrow_width':.2,
+    "vertex_size": 255, 
+    'bbox':(0, 0, 3300, 3300),
     'layout': layout,
-    'margin': 68 }
+    'margin': 168 }
 
 #layout = graph.layout("kamada_kawai")
+#graph.es[4].draw_directed_edge()
 
-igraph.plot(graph, **visual_style)
+igraph.plot(graph,  **visual_style)
