@@ -48,7 +48,8 @@ layout = graph.layout("auto")
 visual_style = { "edge_width":6,
     "vertex_size": 95, 
     'bbox':(0, 0, 1300, 1300),
-    'layout': layout }
+    'layout': layout,
+    'margin': 68 }
 
 #layout = graph.layout("kamada_kawai")
 
