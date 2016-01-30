@@ -5,10 +5,10 @@ import countries as COS
 countryDict = COS.countries()
 contiguousBorders = COS.contiguousBorders(countryDict)
 waterRoutes = COS.waterRoutes(countryDict)
+countryList = COS.coList()
 
 
-
-graph = igraph.Graph(vertex_attrs={"label": COS.coList()}, edges=contiguousBorders, directed=True)
+graph = igraph.Graph(vertex_attrs={"label": countryList}, edges=contiguousBorders, directed=True)
 ## graph.is_directed()
 #graph.add_vertices( len(countryDict) )
 
@@ -45,6 +45,28 @@ for vertexNumber in range(len(countryDict)):
     else:
         print 'WARNING: No color specified for: ',graph.vs[vertexNumber]['label']
 
+
+print graph.vs[(3,5)]
+
+#######
+#def distancesBetweenCountries():
+#    countryDict = countries()
+#    countryList= coList()
+#    waterRoutesList = waterRoutes(countryDict)
+#    landRoutesList = contiguousBorders(countryDict)
+countryDistances = COS.distanceBetweenCountries()
+for xCo in countryList:
+    for yCo in countryList:
+        vertex = (countryDict[xCo], countryDict[yCo])
+        if (vertex in waterRoutes) or (vertex in contiguousBorders):
+            try:
+                graph.vs[vertex]['length'] = countryDistances[vertex]
+            except: 
+                print 'Match at: ', vertex, ' or: ', xCo, yCo
+#            graph.vs[vertex]['length']=countryDistances[vertex]
+#            pass; ## TODO 
+
+######
 
 
 #layout = graph.layout("auto")

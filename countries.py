@@ -1,5 +1,46 @@
-def countries(): 
+def coList():
+    countries = ['Syria',
+        'Turkey',
+        'Greece',
+        'Bulgaria',
+        'Romania',
+        'Serbia',
+        'Macedonia',
+        'Albania',
+        'Montenegro',
+        'Bosnia',
+        'Hungary',
+        'Croatia',
+        'Slovenia',
+        'Italy',
+        'Switzerland',
+        'Austria',
+        'Germany',
+        'Czech Republic',
+        'Slovakia',
+        'Poland',
+        'Finland',
+        'Sweden',
+        'Norway',
+        'Denmark',
+        'Netherlands',
+        'Belgium',
+        'France',
+        'UK',
+        'Spain',
+        'Portugal',
+        'Malta',
+        'Morocco',
+        'Algeria',
+        'Tunisia',
+        'Libya',
+        'Egypt',
+        'Israel',
+        'Jordan',
+        'Lebanon']
+    return countries
 
+def countries(): 
     countries = {'Syria': 0,
         'Turkey': 1,
         'Greece': 2,
@@ -200,11 +241,119 @@ def southernEuropeCountries():
         'Malta',
         'Macedonia'
     ]
+    
+def countryList():
+    return countries()
+    
+    
+def distanceBetweenCountries(): 
+    countries = countryList()
+        
+    distances = {(countries['Albania'],countries['Macedonia']):.15 ,
+            (countries['Albania'],countries['Montenegro']): .15,
+            (countries['Algeria'],countries['France']):.9 ,
+            (countries['Algeria'],countries['Spain']):.9 ,
+            (countries['Austria'],countries['Germany']):.4 ,
+            (countries['Austria'],countries['Switzerland']):.4 ,
+            (countries['Belgium'],countries['Germany']):.4 ,
+            (countries['Belgium'],countries['Netherlands']):.15 ,
+            (countries['Belgium'],countries['France']):.4 ,
+            (countries['Bosnia'],countries['Croatia']):.15 ,
+            (countries['Bulgaria'],countries['Greece']):.4 ,
+            (countries['Bulgaria'],countries['Macedonia']):.4 ,
+            (countries['Bulgaria'],countries['Romania']):.4 ,
+            (countries['Czech Republic'],countries['Austria']):.15 ,
+            (countries['Czech Republic'],countries['Germany']):.4 ,
+            (countries['Czech Republic'],countries['Poland']):.15 ,
+            (countries['Croatia'],countries['Hungary']):.4 ,
+            (countries['Croatia'],countries['Slovenia']):.15 ,
+            (countries['Denmark'],countries['Finland']):.9 ,
+            (countries['Denmark'],countries['Norway']):.4 ,
+            (countries['Denmark'],countries['Sweden']):.65 ,
+            (countries['Egypt'],countries['Greece']):.9 ,
+            (countries['Egypt'],countries['Libya']):.9 ,
+            (countries['France'],countries['Belgium']):.4 ,
+            (countries['France'],countries['Switzerland']):.4 ,
+            (countries['France'],countries['UK']):.9 ,
+            (countries['Finland'],countries['Denmark']):.9 ,
+            (countries['Finland'],countries['Sweden']):.4 ,
+            (countries['Finland'],countries['Norway']):.65 ,
+            (countries['Germany'],countries['Austria']):.4 ,
+            (countries['Germany'],countries['Belgium']):.4 ,
+            (countries['Germany'],countries['Denmark']):.4 ,
+            (countries['Germany'],countries['Finland']):.9 ,
+            (countries['Germany'],countries['Netherlands']):.4 ,
+            (countries['Germany'],countries['Norway']):.9 ,
+            (countries['Germany'],countries['Sweden']):.9 ,
+            (countries['Germany'],countries['Switzerland']):.4 ,
+            (countries['Greece'],countries['Albania']):.15 ,
+            (countries['Greece'],countries['Italy']):.65 ,
+            (countries['Greece'],countries['Macedonia']):.15 ,
+            (countries['Hungary'],countries['Austria']):.4 ,
+            (countries['Hungary'],countries['Slovakia']):.15 ,
+            (countries['Israel'],countries['Egypt']):.65 ,
+            (countries['Israel'],countries['Jordan']):.15 ,
+            (countries['Italy'],countries['Austria']):.65 ,
+            (countries['Italy'],countries['France']):.65 ,
+            (countries['Italy'],countries['Switzerland']):.65 ,
+            (countries['Jordan'],countries['Egypt']):.65 ,
+            (countries['Lebanon'],countries['Israel']):.4 ,
+            (countries['Libya'],countries['Algeria']):.9 ,
+            (countries['Libya'],countries['Italy']):.9 ,
+            (countries['Libya'],countries['Malta']):.9 ,
+            (countries['Libya'],countries['Tunisia']):.9 ,
+            (countries['Macedonia'],countries['Serbia']):.15 ,
+            (countries['Malta'],countries['Italy']):.4 ,
+            (countries['Montenegro'],countries['Bosnia']):.15 ,
+            (countries['Montenegro'],countries['Serbia']):.15 ,
+            (countries['Morocco'],countries['Algeria']):.65 ,
+            (countries['Morocco'],countries['Spain']):.9 ,
+            (countries['Netherlands'],countries['Germany']):.4 ,
+            (countries['Netherlands'],countries['Belgium']):.15 ,
+            (countries['Norway'],countries['Finland']):.65 ,
+            (countries['Norway'],countries['Sweden']):.4 ,
+            (countries['Norway'],countries['Denmark']):.4 ,
+            (countries['Poland'],countries['Czech Republic']):.15 ,
+            (countries['Poland'],countries['Finland']):.9 ,
+            (countries['Poland'],countries['Germany']):.65 ,
+            (countries['Poland'],countries['Norway']):.9 ,
+            (countries['Poland'],countries['Sweden']):.65 ,
+            (countries['Romania'],countries['Hungary']):.4 ,
+            (countries['Romania'],countries['Serbia']):.4 ,
+            (countries['Serbia'],countries['Hungary']):.4 ,
+            (countries['Slovakia'],countries['Austria']):.15 ,
+            (countries['Slovakia'],countries['Czech Republic']):.4 ,
+            (countries['Slovakia'],countries['Poland']):.4 ,
+            (countries['Slovenia'],countries['Austria']):.15 ,
+            (countries['Slovenia'],countries['Italy']):.4 ,
+            (countries['Spain'],countries['France']):.65 ,
+            (countries['Spain'],countries['Portugal']):.4 ,
+            (countries['Sweden'],countries['Finland']):.4 ,
+            (countries['Sweden'],countries['Norway']):.4 ,
+            (countries['Switzerland'],countries['Austria']):.4 ,
+            (countries['Switzerland'],countries['France']):.4 ,
+            (countries['Switzerland'],countries['Germany']):.4 ,
+            (countries['Syria'],countries['Lebanon']):.4 ,
+            (countries['Syria'],countries['Turkey']):.4 ,
+            (countries['Tunisia'],countries['Algeria']):.65 ,
+            (countries['Tunisia'],countries['Malta']):.4 ,
+            (countries['Turkey'],countries['Bulgaria']):.65 ,
+            (countries['Turkey'],countries['Greece']):.9 
+        }
+#    print distances
+    return distances
+
+
+
 
 
 
     
 
 if __name__ == '__main__':
-    countries = countries()
-    print contiguousBorders(countries)
+    #countries = countries()
+    #print contiguousBorders(countries)
+    #print coList()
+    distances = distanceBetweenCountries()
+    print distances[(1,2)]
+
