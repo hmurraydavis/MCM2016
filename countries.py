@@ -514,11 +514,53 @@ def gniPerCapitaCountries():
         'Lebanon': 10030.00}
     return countries
 
+def unemploymentCountries(): 
+    countries = {'Syria': 1, 
+        'Turkey': 0.11, 
+        'Greece': 0.24,
+        'Bulgaria': 0.10,
+        'Romania': 0.07,
+        'Serbia': 0.17,
+        'Macedonia': 0.25,
+        'Albania': 0.18,
+        'Montenegro': 0.17,
+        'Bosnia': 0.43,
+        'Hungary': 0.06,
+        'Croatia': 0.18,
+        'Slovenia': 0.12,
+        'Italy': 0.11,
+        'Switzerland': 0.04,
+        'Austria': 0.11,
+        'Germany': 0.05,
+        'Czech Republic': 0.06,
+        'Slovakia': 0.11,
+        'Poland': 0.10,
+        'Finland': 0.09,
+        'Sweden': 0.07,
+        'Norway': 0.05,
+        'Denmark': 0.05,
+        'Netherlands': 0.07,
+        'Belgium': 0.08,
+        'France': 0.11,
+        'UK': 0.05,
+        'Spain': 0.21,
+        'Portugal': 0.12,
+        'Malta': 0.05,
+        'Morocco': 0.10, 
+        'Algeria': 0.11, 
+        'Tunisia': 0.15, 
+        'Libya': 0.20, 
+        'Egypt': 0.13, 
+        'Israel': 0.05,
+        'Jordan': 0.14,
+        'Lebanon': 0.06}
+    return countries
+
 
 if __name__ == '__main__':
     #countries = countries()
     #print contiguousBorders(countries)
     #print coList()
     distances = distanceBetweenCountries()
-    print gniPerCapitaCountries()
+    print unemploymentCountries()
 
