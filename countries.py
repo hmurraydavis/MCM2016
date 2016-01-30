@@ -385,10 +385,48 @@ def nativePopulationCountries():
         'Lebanon': 4500000}
     return countries
 
+def safetyCountries(): 
+    countries = {'Syria': 0.47,
+        'Turkey': 0.73,
+        'Greece': 0.82,
+        'Bulgaria': 0.88,
+        'Romania': 0.89,
+        'Serbia': 0.85,
+        'Macedonia': 0.81,
+        'Albania': 0.84,
+        'Montenegro': 0.83,
+        'Bosnia': 0.83,
+        'Hungary': 0.91,
+        'Croatia': 0.89,
+        'Slovenia': 0.92,
+        'Italy': 0.87,
+        'Switzerland': 0.95,
+        'Austria': 0.96,
+        'Germany': 0.92,
+        'Czech Republic': 0.93,
+        'Slovakia': 0.90,
+        'Poland': 0.91,
+        'Finland': 0.94,
+        'Sweden': 0.93,
+        'Norway': 0.92,
+        'Denmark': 0.97,
+        'Netherlands': 0.91,
+        'Belgium': 0.93,
+        'France': 0.85,
+        'UK': 0.86,
+        'Spain': 0.91,
+        'Portugal': 0.93,
+        'Malta': 0.87,
+        'Morocco': 0.80,
+        'Algeria': 0.77,
+        'Tunisia': 0.81,
+        'Libya': 0.64,
+        'Egypt': 0.72,
+        'Israel': 0.64,
+        'Jordan': 0.81,
+        'Lebanon': 0.68}
+    return countries
 
-
-
-    
 
 if __name__ == '__main__':
     #countries = countries()
