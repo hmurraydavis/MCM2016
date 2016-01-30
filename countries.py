@@ -432,7 +432,7 @@ def safetyCountries():
     
 def refugeeApplicationsCountries(): 
     countries = {'Syria': 1, 
-        'Turkey': 1000, # TODO
+        'Turkey': 145335, 
         'Greece': 4862,
         'Bulgaria': 16929,
         'Romania': 2449,
@@ -464,11 +464,11 @@ def refugeeApplicationsCountries():
         'Malta': 1191,
         'Morocco': 2216, 
         'Algeria': 5892, 
-        'Tunisia': 1000, #TODO
-        'Libya': 1000, #TODO
-        'Egypt': 1000, #TODO
+        'Tunisia': 156, 
+        'Libya': 8904, 
+        'Egypt': 30019, 
         'Israel': 1,
-        'Jordan': 1000, # TODO
+        'Jordan': 20693,
         'Lebanon': 10851}
     return countries
 
