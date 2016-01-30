@@ -11,6 +11,8 @@ contiguousBorders = COS.contiguousBorders(countryDict)
 waterRoutes = COS.waterRoutes(countryDict)
 countryList = COS.coList()
 
+numRefsOverTime = { country:[0] for country in countryList }
+
 
 graph = igraph.Graph(vertex_attrs={"label": countryList}, edges=contiguousBorders, directed=True)
 for i, edge in enumerate( graph.es ):
@@ -82,6 +84,8 @@ nativePopulation = COS.nativePopulationCountries()
 for country in countryList:
     graph.vs[countryDict[country]]['natPop'] = nativePopulation[country]
     
+for vertexNumIndex in range( len(graph.vs) ):
+    numRefsOverTime[ graph.vs[vertexNumIndex]['label'] ] = [ graph.vs[vertexNumIndex]['NumRefs'] ]
 
 #layout = graph.layout("auto")
 
@@ -165,11 +169,10 @@ if __name__ == '__main__':
     #print '\n'
 #    popFlowCalculate( graph.es[20] ) 
 
-    numRefsOverTime = { country:[0] for country in countryList }
+    
     timeStep = 0
 
     
-#    while timeStep<70: #
     for timeStep in range(45):
         for edge in graph.es :
             #costFuncCalculate(edge)
@@ -180,45 +183,30 @@ if __name__ == '__main__':
             popFlow = edge['PopFlow']
             source = edge['Source']
             target = edge['Target'] 
-            #print 'cost: ', edge['Cost'] 
                 
             graph.vs[target]['NumRefs'] = graph.vs[target]['NumRefs'] + popFlow
             graph.vs[source]['NumRefs'] = graph.vs[source]['NumRefs'] - popFlow
-##        source = [ graph.es['SourceCo'] for i in graph.es ] 
-##        target = [ graph.es['Target'] for i in graph.es ] # edge['Target'] 
-##        print 'target is: ', target
-##        #print 'cost: ', edge['Cost'] 
-##            
-##        graph.vs[target]['NumRefs'] = 6#graph.vs[ target  ]['NumRefs'] + graph.es['PopFlow']
-###        graph.vs[source]['NumRefs'] = graph.vs[ graph.es['Source'] ]['NumRefs'] - graph.es['PopFlow']
+
         
         for vertexNumIndex in range( len(graph.vs) ):
-            if timeStep == 0: 
-                numRefsOverTime[ graph.vs[vertexNumIndex]['label'] ] = [ graph.vs[vertexNumIndex]['NumRefs'] ]
+#            if timeStep == 0: 
+#                numRefsOverTime[ graph.vs[vertexNumIndex]['label'] ] = [ graph.vs[vertexNumIndex]['NumRefs'] ]
                 
-                #adjacents = graph.adjacent( graph.vs[source] )
-                a = graph.adjacent( graph.vs[20] )
-                b = graph.adjacent( graph.vs[21] )
-                c = graph.adjacent( graph.vs[22] )
-
-                print 'first run complete! ', numRefsOverTime
-            else:
-#                print 'Jessie is the best'
+#            else:
                 numRefsOverTime[ graph.vs[vertexNumIndex]['label'] ].append( graph.vs[vertexNumIndex]['NumRefs'] )
-#        timeStep = timeStep + 1
+
         
     hijessie = numRefsOverTime.keys()   
-    print 'Hi jessie is: ', numRefsOverTime 
     pprint.pprint( zip( numRefsOverTime.keys(), [numRefsOverTime[co][0] for co in hijessie] ) )
     #print( numRefsOverTime )
 
-
-    plotList = ['Algeria', 'Greece', 'Italy', 'Germany', 'Sweden', 'UK', 'Portugal']#['Sweden','Norway','Finland' ,'Italy', 'Austria', 'Greece', 'Syria','Poland', 'France', 'Germany', 'UK', 'Portugal']
-    #for country in plotList:
-    #    plt.plot(numRefsOverTime[country], linewidth=6, alpha=.75, label=country) 
-    plt.plot(numRefsOverTime['Sweden'], linewidth=25, alpha=.9, color='#2F4172', label='Sweden' ) 
-    plt.plot(numRefsOverTime['Norway'],  linewidth=11, alpha=.8, color='#2C8437', label='Norway' ) 
-    plt.plot(numRefsOverTime['Finland'], linewidth=3, alpha=1, color='#AA6E39', label='Finland' ) 
+    print numRefsOverTime['Turkey']
+    plotList = ['Turkey', 'Serbia', 'Hungary', 'Poland', 'Austria', 'France', 'UK']#['Algeria', 'Greece', 'Italy', 'Germany', 'Sweden', 'UK', 'Portugal']#['Sweden','Norway','Finland' ,'Italy', 'Austria', 'Greece', 'Syria','Poland', 'France', 'Germany', 'UK', 'Portugal']
+    for country in plotList:
+        plt.plot(numRefsOverTime[country], linewidth=6, alpha=.75, label=country) 
+    plt.plot(numRefsOverTime['Syria'], linewidth=25, alpha=.9, color='#2F4172', label='Syria' ) 
+#    plt.plot(numRefsOverTime['Norway'],  linewidth=11, alpha=.8, color='#2C8437', label='Norway' ) 
+#    plt.plot(numRefsOverTime['Finland'], linewidth=3, alpha=1, color='#AA6E39', label='Finland' ) 
     plt.xlabel('Time', fontsize = 18)
     plt.ylabel('Number of Refugees', fontsize = 18)
     plt.suptitle('Diaspora over Time', fontsize = 20)
