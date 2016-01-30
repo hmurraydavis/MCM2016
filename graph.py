@@ -124,9 +124,11 @@ for edge in graph.es:
 ## Place vertex properties on verticies:
 nativePopulation = COS.nativePopulationCountries()
 refugeeApplications = COS.refugeeApplicationsCountries()
+safetyCountries = COS.safetyCountries()
 for country in countryList:
     graph.vs[countryDict[country]]['natPop'] = nativePopulation[country] 
     graph.vs[countryDict[country]]['refApps'] = refugeeApplications[country] 
+    graph.vs[countryDict[country]]['SafetyCo'] = safetyCountries[country] 
 
     
 for vertexNumIndex in range( len(graph.vs) ):
@@ -255,16 +257,16 @@ if __name__ == '__main__':
         for i in range(45):
             print graph.es[i]
     
-    if 0: ## Vertexes:
+    if 1: ## Vertexes:
         for i in range(30):
             print graph.vs[i]
         
-#for vertex in graph.vs :
-#    vertex["size"] = int( vertex['NumRefs']*.0001 )
+for vertex in graph.vs :
+    vertex["size"] = int( vertex['SafetyCo']*26 )
 
-for edge in graph.es:
-    edge['width'] = edge['MoneyCost']*10
-    edge['name'] = str( edge['MoneyCost'] )
+#for edge in graph.es:
+#    edge['width'] = edge['MoneyCost']*10
+#    edge['name'] = str( edge['MoneyCost'] )
     
 layout = graph.layout("kk")
 igraph.plot(graph, layout=layout )#,  **visual_style)
