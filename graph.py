@@ -118,31 +118,33 @@ def costFuncCalculate(edge, update=True):
         edge['Cost'] = cost
     return cost
     
-def popFlowCalculate(edge):
+def popFlowCalculate(edge, update=True):
+    ''' 
+    Calculate the flow of refugees along a given edge.
+    Option to automatically update the "PopFlow" attribute for the edge. Default behavior.
+    
+    INPUT: edge : indivigual igraph edge object.
+        *update : Boolian. If True, execution will update the "PopFlow" attribute of the given edge.
+    
+    RETURNS: popFlow : The number of refugees flowing along an edge.
+    '''
     source = edge['Source']
     target = edge['Target']  
     
     costSelf = 1.0#graph.vs[source]['CostSelf']  ##CostSelf
-    print 'Country is: ', edge['SourceCo']
-    print 'Self cost: ', costSelf
+    
     
     adjacents = graph.adjacent( graph.vs[source] )
     
     costs = [ graph.es[i]['Cost'] for i in adjacents]
-    adjNames = [ graph.es[i]['TargetCo'] for i in adjacents]
-    print 'adj: ', zip(adjNames, costs)
     
     frac = edge['Cost']/(sum(costs)+costSelf)
-
-    print 'frac: ', frac
-    print 'chilling refs: ', graph.vs[source]['NumRefs']
     popFlow = graph.vs[source]['NumRefs'] * frac
-    
-    print 'numerator cost: ', edge['Cost']
-    print 'pop flow: ', popFlow
-    
-#    for index in adjacents:
-#        print index, graph.es[index]['Cost']
+    #print popFlow, 'refugees from: ', edge['SourceCo'], ' to ', edge['TargetCo']
+    if update == True:
+        edge['PopFlow'] = popFlow
+    return popFlow
+
     
     
 
@@ -158,10 +160,10 @@ if __name__ == '__main__':
 #    popFlowCalculate( graph.es[20] ) 
     
     for edge in graph.es :
-        #costFuncCalculate(edge)
+        costFuncCalculate(edge)
         popFlowCalculate(edge)
     
-    if 0: ## Edges
+    if 1: ## Edges
         for i in range(45):
             print graph.es[i]
     
