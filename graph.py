@@ -1,5 +1,6 @@
 import igraph
 import countries as COS
+import pprint
 
 
 countryDict = COS.countries()
@@ -45,19 +46,35 @@ for vertexNumber in range(len(countryDict)):
     else:
         print 'WARNING: No color specified for: ',graph.vs[vertexNumber]['label']
 
-
+for vertex in waterRoutes:
+    graph.es[vertex]['transitMethod']='sea'
+    
+for vertex in contiguousBorders:
+    graph.es[vertex]['transitMethod']='land'
+    
 ## Place edge properties on edges
 countryDistances = COS.distanceBetweenCountries()
-for xCo in countryList:
-    for yCo in countryList:
+for i, xCo in enumerate(countryList):
+    for j, yCo in enumerate(countryList):
         vertex = (countryDict[xCo], countryDict[yCo])
-        if (vertex in waterRoutes) or (vertex in contiguousBorders):
+#        prior = graph.es[vertex]['transitMethod']
+        if (vertex in waterRoutes):
             try:
                 graph.es[vertex]['distance'] = countryDistances[vertex]
+#                graph.es[vertex]['transitMethod'] = 'sea'+str(i)+' '+str(j)+xCo+yCo
             except: 
                 print 'WARNING: Vertex: ', \
                     vertex, ' describing: ', \
                     xCo, yCo, ' does not exist'
+        elif (vertex in contiguousBorders): 
+            try:
+                    graph.es[vertex]['distance'] = countryDistances[vertex]
+#                    graph.es[vertex]['transitMethod'] = 'land'+str(i)+' '+str(j)+xCo+yCo
+            except: 
+                print 'WARNING: Vertex: ', \
+                    vertex, ' describing: ', \
+                    xCo, yCo, ' does not exist'
+#        print prior, graph.es[vertex]['transitMethod']
 
 nativePopulation = COS.nativePopulationCountries()
 for country in countryList:
@@ -77,5 +94,6 @@ for country in countryList:
 
 ##layout = graph.layout("kamada_kawai")
 
+print graph.vs[4], '\n'
 
 igraph.plot(graph)#,  **visual_style)
