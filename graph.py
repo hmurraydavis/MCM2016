@@ -95,15 +95,27 @@ for country in countryList:
 
 #print graph.vs[4], '\n'
 
-def costFuncCalculate(edge):
+def costFuncCalculate(edge, update=True):
+    ''' 
+    Calculate the cost for a given edge.
+    Option to automatically update the "Cost" attribute for the edge. Default behavior.
+    
+    INPUT: edge : indivigual igraph edge object.
+        *update : Boolian. If True, execution will update the Cost attribute of the given edge.
+    
+    RETURNS: cost : The evaluated value of the cost function.
+    '''
     source = edge['Source']
     target = edge['Target']
-    print edge['SourceCo'], edge['TargetCo']
+
     popS = graph.vs[source]['natPop']
     popT = graph.vs[target]['natPop']
     dist = edge['Distance']
+    
     cost = popS * popT / dist
-    print cost
+    
+    if update:
+        edge['Cost'] = cost
     return cost
     
 
@@ -112,9 +124,8 @@ if __name__ == '__main__':
     print '\n'
     costFuncCalculate( graph.es[20] ) 
     
-    for i in range(30):
-        for vertex in graph.vs:
-            pass;
+    for edge in graph.es :
+        costFuncCalculate(edge)
     
     if 0: ## Edges
         for i in range(45):
