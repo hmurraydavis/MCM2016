@@ -429,6 +429,48 @@ def safetyCountries():
         'Jordan': 0.81,
         'Lebanon': 0.68}
     return countries
+    
+def refugeeApplicationsCountries(): 
+    countries = {'Syria': 1, 
+        'Turkey': 1000, # TODO
+        'Greece': 4862,
+        'Bulgaria': 16929,
+        'Romania': 2449,
+        'Serbia': 276211,
+        'Macedonia': 2087,
+        'Albania': 190,
+        'Montenegro': 2975,
+        'Bosnia': 103,
+        'Hungary': 71999,
+        'Croatia': 359,
+        'Slovenia': 193,
+        'Italy': 2417,
+        'Switzerland': 11180,
+        'Austria': 31160,
+        'Germany': 184053,
+        'Czech Republic': 357,
+        'Slovakia': 62,
+        'Poland': 746,
+        'Finland': 1127,
+        'Sweden': 102870,
+        'Norway': 11246,
+        'Denmark': 15978,
+        'Netherlands': 29813,
+        'Belgium': 13768,
+        'France': 9431,
+        'UK': 8060,
+        'Spain': 7631,
+        'Portugal': 190,
+        'Malta': 1191,
+        'Morocco': 2216, 
+        'Algeria': 5892, 
+        'Tunisia': 1000, #TODO
+        'Libya': 1000, #TODO
+        'Egypt': 1000, #TODO
+        'Israel': 1,
+        'Jordan': 1000, # TODO
+        'Lebanon': 10851}
+    return countries
 
 
 if __name__ == '__main__':

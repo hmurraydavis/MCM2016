@@ -81,8 +81,11 @@ for edge in graph.es:
 
 
 nativePopulation = COS.nativePopulationCountries()
+refugeeApplications = COS.refugeeApplicationsCountries()
 for country in countryList:
-    graph.vs[countryDict[country]]['natPop'] = nativePopulation[country]
+    graph.vs[countryDict[country]]['natPop'] = nativePopulation[country] 
+    graph.vs[countryDict[country]]['refApps'] = refugeeApplications[country] 
+    # refugeeApplicationsCountries
     
 for vertexNumIndex in range( len(graph.vs) ):
     numRefsOverTime[ graph.vs[vertexNumIndex]['label'] ] = [ graph.vs[vertexNumIndex]['NumRefs'] ]
@@ -234,7 +237,7 @@ if __name__ == '__main__':
         for i in range(45):
             print graph.es[i]
     
-    if 0: ## Vertexes:
+    if 1: ## Vertexes:
         for i in range(30):
             print graph.vs[i]
         
