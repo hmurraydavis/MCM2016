@@ -39,18 +39,25 @@ vertexOpacity = .5
 for vertexNumber in range(len(countryDict)):
     if graph.vs[vertexNumber]['label'] == 'Syria':
         graph.vs[vertexNumber]['color'] = 'rgba(78,0,18, '+str(vertexOpacity)+')'
+        graph.vs[vertexNumber]['NumRefs'] = 3000000000
     elif graph.vs[vertexNumber]['label'] in COS.africaCountries():
         graph.vs[vertexNumber]['color'] = 'rgba(156, 52, 76, '+str(vertexOpacity)+')'
+        graph.vs[vertexNumber]['NumRefs'] = 5000
     elif graph.vs[vertexNumber]['label'] in COS.middleEastCountries():
         graph.vs[vertexNumber]['color'] = 'rgba(170, 95, 57, '+str(vertexOpacity)+')'
+        graph.vs[vertexNumber]['NumRefs'] = 5000
     elif graph.vs[vertexNumber]['label'] in COS.centralEuropeCountries():
         graph.vs[vertexNumber]['color'] = 'rgba(0,0,100, '+str(vertexOpacity)+')' 
+        graph.vs[vertexNumber]['NumRefs'] = 6000
     elif graph.vs[vertexNumber]['label'] in COS.southernEuropeCountries():
         graph.vs[vertexNumber]['color'] = 'rgba(38, 113, 88, '+str(vertexOpacity)+')'
+        graph.vs[vertexNumber]['NumRefs'] = 3000
     elif graph.vs[vertexNumber]['label'] in COS.westernEuropeCountries():
         graph.vs[vertexNumber]['color'] = 'rgba(87,49,50, '+str(vertexOpacity)+')'
+        graph.vs[vertexNumber]['NumRefs'] = 3000
     elif graph.vs[vertexNumber]['label'] in COS.nordicCountries():
         graph.vs[vertexNumber]['color'] = 'rgba(0,57,38, '+str(vertexOpacity)+')'
+        graph.vs[vertexNumber]['NumRefs'] = 3000
     else:
         print 'WARNING: No color specified for: ',graph.vs[vertexNumber]['label']
 
@@ -61,10 +68,10 @@ for vertexNumber in range(len(countryDict)):
 ## Place edge properties on edges
 countryDistances = COS.distanceBetweenCountries()
 for edge in graph.es:
+    edge['Cost'] = 1 ## Initialize each edge w/ cost function
     for xCo in countryList:
         for yCo in countryList:
             if (edge['SourceCo']==xCo) and (edge['TargetCo']==yCo):
-                print 'Hi!'
                 edge['Distance'] = countryDistances[(countryDict[xCo],countryDict[yCo])]
 
 
@@ -88,12 +95,32 @@ for country in countryList:
 
 #print graph.vs[4], '\n'
 
+def costFuncCalculate(edge):
+    source = edge['Source']
+    target = edge['Target']
+    print edge['SourceCo'], edge['TargetCo']
+    popS = graph.vs[source]['natPop']
+    popT = graph.vs[target]['natPop']
+    dist = edge['Distance']
+    cost = popS * popT / dist
+    print cost
+    return cost
+    
+
 if __name__ == '__main__':
-    if True: ## Edges
+    costFuncCalculate( graph.es[50] )    
+    print '\n'
+    costFuncCalculate( graph.es[20] ) 
+    
+    for i in range(30):
+        for vertex in graph.vs:
+            pass;
+    
+    if 0: ## Edges
         for i in range(45):
             print graph.es[i]
     
-    if True: ## Vertexes:
+    if 0: ## Vertexes:
         for i in range(30):
             print graph.vs[i]
         
