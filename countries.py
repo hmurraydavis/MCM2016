@@ -557,12 +557,12 @@ def unemploymentCountries():
     return countries
 
 def educationCountries(): 
-    countries= {"'Germany'": 0.044,
+    countries= {"Germany": 0.044,
     'Jordan': 0.0496, 
     'Ireland': 0.057, 
     'Albania': 0.035,
-    'SlovakRepublic': 0.038,
-    'CzechRepublic': 0.044, 
+    'Slovakia': 0.038,
+    'Czech Republic': 0.044, 
     'Bulgaria': 0.036, 
     'Tunisia': 0.0622, 
     'France': 0.056, 
@@ -582,7 +582,7 @@ def educationCountries():
     'Luxembourg': 0.043, 
     'Norway': 0.073, 
     'Portugal': 0.051, 
-    'UnitedKingdom': 0.056, 
+    'UK': 0.056, 
     'Lebanon': 0.0257, 
     'Spain': 0.053, 
     'Denmark': 0.079, 
@@ -606,8 +606,8 @@ def lifeExpCountries():
     'Jordan': 73.75,
     'Ireland': 81.1,
     'Albania': 77.35,
-    'SlovakRepublic': 76.5,
-    'CzechRepublic': 78.3, 
+    'Slovakia': 76.5,
+    'Czech Republic': 78.3, 
     'Bulgaria': 74.32, 
     'Tunisia': 75.1,
     'France': 82.3, 
@@ -627,7 +627,7 @@ def lifeExpCountries():
     'Luxembourg': 81.9,
     'Norway': 81.8,
     'Portugal': 80.8,
-    'UnitedKingdom': 81.1,
+    'UK': 81.1,
     'Lebanon': 79.85, 
     'Spain': 83.2,
     'Denmark': 80.4,
@@ -652,5 +652,5 @@ if __name__ == '__main__':
     #print contiguousBorders(countries)
     #print coList()
     distances = distanceBetweenCountries()
-    print unemploymentCountries()
-
+    print lifeExpCountries()
+    print educationCountries()
