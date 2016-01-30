@@ -85,6 +85,7 @@ def countries():
 def contiguousBorders(countries):
     edges = [ (countries['Syria'], countries['Turkey']),
         (countries['Syria'], countries['Lebanon']),
+        (countries['Syria'], countries['Jordan']),
         (countries['Turkey'], countries['Bulgaria']),
         #(countries['Turkey'], countries['Greece']), 
         (countries['Bulgaria'], countries['Greece']), 
@@ -335,6 +336,7 @@ def distanceBetweenCountries():
             (countries['Switzerland'],countries['Germany']):.4 ,
             (countries['Syria'],countries['Lebanon']):.4 ,
             (countries['Syria'],countries['Turkey']):.4 ,
+            (countries['Syria'],countries['Jordan']):.4 ,
             (countries['Tunisia'],countries['Algeria']):.65 ,
             (countries['Tunisia'],countries['Malta']):.4 ,
             (countries['Turkey'],countries['Bulgaria']):.65 ,
