@@ -10,19 +10,18 @@ countryList = COS.coList()
 
 
 graph = igraph.Graph(vertex_attrs={"label": countryList}, edges=contiguousBorders, directed=True)
-## graph.is_directed()
-#graph.add_vertices( len(countryDict) )
+for i, edge in enumerate( graph.es ):
+    edge['source']=contiguousBorders[i][0]
+    edge['sourceCo']=countryList[ contiguousBorders[i][0] ]
+    edge['target']=contiguousBorders[i][1]
+    edge['targetCo']=countryList[ contiguousBorders[i][1] ]
+    edge['transitMethod']='land'
 
-### Add vertex labels:
-#for key in countryKeys:
-#    graph.vs[countryDict[key]]['label'] = key
-#    graph.vs[countryDict[key]]['p_death'] = 4
 
 graph.vs['label_size'] = 8 ## Set fount size
 graph.vs['shape'] = 'circle'
 
-### Add edges for borders and boats:
-#graph.add_edges( contiguousBorders )
+### Add edges for boats:
 graph.es[0:len(contiguousBorders)]["color"] = "yellow"
 graph.add_edges( waterRoutes )
 
@@ -46,12 +45,13 @@ for vertexNumber in range(len(countryDict)):
     else:
         print 'WARNING: No color specified for: ',graph.vs[vertexNumber]['label']
 
+print graph.es.select(_source=1)[0]
+## Specify if it's a land or sea route: 
 for vertex in waterRoutes:
+    #print graph.es['source']#.attributes()
     graph.es[vertex]['transitMethod']='sea'
     
-for vertex in contiguousBorders:
-    graph.es[vertex]['transitMethod']='land'
-    
+
 ## Place edge properties on edges
 countryDistances = COS.distanceBetweenCountries()
 for i, xCo in enumerate(countryList):
