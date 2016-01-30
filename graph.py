@@ -44,7 +44,7 @@ vertexOpacity = .5
 for vertexNumber in range(len(countryDict)):
     if graph.vs[vertexNumber]['label'] == 'Syria':
         graph.vs[vertexNumber]['color'] = 'rgba(78,0,18, '+str(vertexOpacity)+')'
-        graph.vs[vertexNumber]['NumRefs'] = 30000000
+        graph.vs[vertexNumber]['NumRefs'] = 3000000
     elif graph.vs[vertexNumber]['label'] in COS.africaCountries():
         graph.vs[vertexNumber]['color'] = 'rgba(156, 52, 76, '+str(vertexOpacity)+')'
         graph.vs[vertexNumber]['NumRefs'] = 5000
@@ -138,7 +138,7 @@ def popFlowCalculate(edge, update=True):
     source = edge['Source']
     target = edge['Target']  
     
-    costSelf = 1.0#graph.vs[source]['CostSelf']  ##CostSelf
+    costSelf = graph.vs[source]['CostSelf']
     
     
     adjacents = graph.adjacent( graph.vs[source] )
@@ -160,8 +160,8 @@ if __name__ == '__main__':
     
     ## Update self cost functions (cost function for staying 
     ## in the same place) For every vertex in the graph:
-    #graph.vs['CostSelf'] = [ (i**2)/.15 for i in graph.vs['natPop'] ]
-    graph.vs['CostSelf'] = [ 1 for i in graph.vs['natPop'] ]
+    
+    #graph.vs['CostSelf'] = [ 1 for i in graph.vs['natPop'] ]
     #graph.vs['natPop'] = [ 1 for i in graph.vs['natPop'] ]
     
     
@@ -173,9 +173,10 @@ if __name__ == '__main__':
     timeStep = 0
 
     
-    for timeStep in range(45):
+    for timeStep in range(90):
+        graph.vs['CostSelf'] = [ (i**2)/.15 for i in graph.vs['natPop'] ] 
         for edge in graph.es :
-            #costFuncCalculate(edge)
+            costFuncCalculate(edge)
             popFlowCalculate(edge)
             
 
@@ -189,10 +190,6 @@ if __name__ == '__main__':
 
         
         for vertexNumIndex in range( len(graph.vs) ):
-#            if timeStep == 0: 
-#                numRefsOverTime[ graph.vs[vertexNumIndex]['label'] ] = [ graph.vs[vertexNumIndex]['NumRefs'] ]
-                
-#            else:
                 numRefsOverTime[ graph.vs[vertexNumIndex]['label'] ].append( graph.vs[vertexNumIndex]['NumRefs'] )
 
         
@@ -200,8 +197,8 @@ if __name__ == '__main__':
     pprint.pprint( zip( numRefsOverTime.keys(), [numRefsOverTime[co][0] for co in hijessie] ) )
     #print( numRefsOverTime )
 
-    print numRefsOverTime['Turkey']
-    plotList = ['Turkey', 'Serbia', 'Hungary', 'Poland', 'Austria', 'France', 'UK']#['Algeria', 'Greece', 'Italy', 'Germany', 'Sweden', 'UK', 'Portugal']#['Sweden','Norway','Finland' ,'Italy', 'Austria', 'Greece', 'Syria','Poland', 'France', 'Germany', 'UK', 'Portugal']
+
+    plotList = ['Sweden','Italy', 'Greece', 'France', 'Germany', 'UK', 'Syria']#['Turkey', 'Serbia', 'Hungary', 'Poland', 'Austria', 'France', 'UK']#['Algeria', 'Greece', 'Italy', 'Germany', 'Sweden', 'UK', 'Portugal']#['Sweden','Norway','Finland' ,'Italy', 'Austria', 'Greece', 'Syria','Poland', 'France', 'Germany', 'UK', 'Portugal']
     for country in plotList:
         plt.plot(numRefsOverTime[country], linewidth=6, alpha=.75, label=country) 
 #    plt.plot(numRefsOverTime['Syria'], linewidth=25, alpha=.9, color='#2F4172', label='Syria' ) 
@@ -210,7 +207,7 @@ if __name__ == '__main__':
     plt.xlabel('Time', fontsize = 18)
     plt.ylabel('Number of Refugees', fontsize = 18)
     plt.suptitle('Diaspora over Time', fontsize = 20)
-    plt.title('uniform cost functions', fontsize = 15)
+    plt.title('cost function: '+r'$\frac{pop_S * pop_T}{dist}$', y=.9,fontsize = 15)
     plt.legend()
     plt.show()
     
@@ -241,6 +238,8 @@ if __name__ == '__main__':
         for i in range(30):
             print graph.vs[i]
         
+for vertex in graph.vs :
+    vertex["size"] = int( vertex['NumRefs']*.0001 )
     
 layout = graph.layout("kk")
-#igraph.plot(graph, layout=layout )#,  **visual_style)
+igraph.plot(graph, layout=layout )#,  **visual_style)

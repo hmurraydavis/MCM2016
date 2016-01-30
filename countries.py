@@ -96,7 +96,8 @@ def contiguousBorders(countries):
         (countries['Greece'], countries['Macedonia']), 
         (countries['Greece'], countries['Albania']), 
         (countries['Albania'], countries['Macedonia']), 
-        (countries['Albania'], countries['Montenegro']), 
+        (countries['Albania'], countries['Montenegro']),
+        (countries['Macedonia'], countries['Serbia']),  
         (countries['Montenegro'], countries['Serbia']), 
         (countries['Montenegro'], countries['Bosnia']) ,
         (countries['Bosnia'], countries['Croatia']),
@@ -346,7 +347,7 @@ def distanceBetweenCountries():
     return distances
 
 def nativePopulationCountries(): 
-    countries = {'Syria': 0,
+    countries = {'Syria': 22850000,
         'Turkey': 75932348.00,
         'Greece': 11030000.00,
         'Bulgaria': 6924716,
@@ -382,7 +383,7 @@ def nativePopulationCountries():
         'Tunisia': 10937521,
         'Libya': 6244174,
         'Egypt': 83386739,
-        'Israel': 36,
+        'Israel': 8200000,
         'Jordan': 6607000,
         'Lebanon': 4500000}
     return countries
