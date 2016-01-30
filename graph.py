@@ -66,31 +66,7 @@ for edge in graph.es:
             if (edge['SourceCo']==xCo) and (edge['TargetCo']==yCo):
                 print 'Hi!'
                 edge['Distance'] = countryDistances[(countryDict[xCo],countryDict[yCo])]
-        #vertex = (countryDict[xCo], countryDict[yCo])
-#        try:
-        #sources = graph.es.select(_between=vertex)
-        #print 'src: ',sources
-            #sources.es['Target'][vertex[1]]['Distance'] = countryDistances[vertex]
-#        except:
-#            pass;
-            #print vertex
-        
-        
-        
-#        if (vertex in waterRoutes):
-#            try:
-#                graph.es[vertex]['distance'] = countryDistances[vertex]
-#            except: 
-#                print 'WARNING: Vertex: ', \
-#                    vertex, ' describing: ', \
-#                    xCo, yCo, ' does not exist'
-#        elif (vertex in contiguousBorders): 
-#            try:
-#                    graph.es[vertex]['distance'] = countryDistances[vertex]
-#            except: 
-#                print 'WARNING: Vertex: ', \
-#                    vertex, ' describing: ', \
-#                    xCo, yCo, ' does not exist'
+
 
 nativePopulation = COS.nativePopulationCountries()
 for country in countryList:
@@ -113,9 +89,14 @@ for country in countryList:
 #print graph.vs[4], '\n'
 
 if __name__ == '__main__':
-    for i in range(45):
-        print graph.es[i]
+    if True: ## Edges
+        for i in range(45):
+            print graph.es[i]
     
+    if True: ## Vertexes:
+        for i in range(30):
+            print graph.vs[i]
+        
     
 
 igraph.plot(graph)#,  **visual_style)
