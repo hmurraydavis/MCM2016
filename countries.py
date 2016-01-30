@@ -692,7 +692,52 @@ def healthCountries():
     'Finland': 4449.0}
        
     return countries
-    
+
+def healthGDPCountries():
+    countries=
+    {'Germany': 0.087, 
+    'Jordan': 0.048, 
+    'Ireland': 0.060, 
+    'Albania': 0.028, 
+    'Serbia': 0.064, 
+    'Bulgaria': 0.045, 
+    'Tunisia': 0.042, 
+    'France': 0.090, 
+    'Malta': 0.058, 
+    'Italy': 0.071, 
+    'Poland': 0.046,
+    'Estonia': 0.045,
+    'Croatia': 0.058,
+    'Netherlands': 0.103,
+    'Sweden': 0.779,
+    'Macedonia': 0.044,
+    'Greece': 0.068,
+    'Morocco': 0.020,
+    'Bosnia': 0.067, 
+    'Austria': 0.084,
+    'Hungary': 0.051,
+    'Luxembourg': 0.059,
+    'Norway': 0.082,
+    'Portugal': 0.063, 
+    'UnitedKingdom': 0.076,
+    'Lebanon': 0.036, 
+    'Spain': 0.063,
+    'Denmark': 0.091, 
+    'Slovenia': 0.066, 
+    'Switzerland': 0.076, 
+    'Israel': 0.043, 
+    'Algeria': 0.049, 
+    'Turkey': 0.043, 
+    'Czech Republic': 0.060,
+    'Montenegro': 0.037,
+    'Romania': 0.043,
+    'Egypt': 0.021,
+    'Syria': 0.015, "
+    'Slovakia': 0.058, 
+    'Belgium': 0.085,
+    'Libya': 0.030, 
+    'Finland': 0.071}
+    return countries
 if __name__ == '__main__':
     #countries = countries()
     #print contiguousBorders(countries)
