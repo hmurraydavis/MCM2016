@@ -204,7 +204,7 @@ if __name__ == '__main__':
     plotList = ['Turkey', 'Serbia', 'Hungary', 'Poland', 'Austria', 'France', 'UK']#['Algeria', 'Greece', 'Italy', 'Germany', 'Sweden', 'UK', 'Portugal']#['Sweden','Norway','Finland' ,'Italy', 'Austria', 'Greece', 'Syria','Poland', 'France', 'Germany', 'UK', 'Portugal']
     for country in plotList:
         plt.plot(numRefsOverTime[country], linewidth=6, alpha=.75, label=country) 
-    plt.plot(numRefsOverTime['Syria'], linewidth=25, alpha=.9, color='#2F4172', label='Syria' ) 
+#    plt.plot(numRefsOverTime['Syria'], linewidth=25, alpha=.9, color='#2F4172', label='Syria' ) 
 #    plt.plot(numRefsOverTime['Norway'],  linewidth=11, alpha=.8, color='#2C8437', label='Norway' ) 
 #    plt.plot(numRefsOverTime['Finland'], linewidth=3, alpha=1, color='#AA6E39', label='Finland' ) 
     plt.xlabel('Time', fontsize = 18)
@@ -242,5 +242,5 @@ if __name__ == '__main__':
             print graph.vs[i]
         
     
-
-#igraph.plot(graph)#,  **visual_style)
+layout = graph.layout("kk")
+#igraph.plot(graph, layout=layout )#,  **visual_style)
