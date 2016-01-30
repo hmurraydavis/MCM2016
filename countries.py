@@ -647,6 +647,52 @@ def lifeExpCountries():
     
     return countries
     
+def healthCountries():
+    countries={'Germany': 5006.0,
+    'Jordan': 336.0,
+    'Ireland': 4233.0,
+    'Albania': 240.0,
+    'Slovakia': 1454.0,
+    'Czech Republic': 1367.0,
+    'Bulgaria': 555.0,
+    'Tunisia': 309.0,
+    'France': 4864.0,
+    'Malta': 2000.0, 
+    'Italy': 3155.0,
+    'Poland': 895.0,
+    'Estonia': 1072.0,
+    'Croatia': 982.0, 
+    'Netherlands': 6145.0, 
+    'Sweden': 5680.0, 
+    'Macedonia': 312.0, 
+    'Greece': 2146.0, 
+    'Morocco': 314.0, 
+    'Bosnia': 449.0, 
+    'Austria': 5427.0, 
+    'Hungary': 1056.0, 
+    'Luxembourg': 7981.0, 
+    'Norway': 9715.0, 
+    'Portugal': 2037.0, 
+    'UnitedKingdom': 3598.0, 
+    'Lebanon': 631.0, 
+    'Spain': 2581.0, 
+    'Denmark': 6270.0, 
+    'Slovenia': 2085.0,
+    'Switzerland': 9276.0, 
+    'Israel': 2599.0, 
+    'Algeria': 314.0, 
+    'Turkey': 608.0, 
+    'Serbia': 475.0, 
+    'Montenegro': 461.0, 
+    'Romania': 504.0,
+    'Egypt': 151.0, 
+    'Syria': 43.0, 
+    'Belgium': 5093.0, 
+    'Libya': 433.0, 
+    'Finland': 4449.0}
+       
+    return countries
+    
 if __name__ == '__main__':
     #countries = countries()
     #print contiguousBorders(countries)
