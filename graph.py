@@ -78,32 +78,50 @@ for edge in graph.es:
         for yCo in countryList:
             if (edge['SourceCo']==xCo) and (edge['TargetCo']==yCo):
                 edge['Distance'] = countryDistances[(countryDict[xCo],countryDict[yCo])]
+       
+    ## Set Safety values for edges based on routes:        
+    if ( (edge['TargetCo'] == 'Italy') or (edge['TargetCo'] == 'Malta') ) and ( edge['TransitMethod'] == 'sea' ):
+        #Central Mediterranean routes
+        edge['Safety'] = 0.3
+    elif ( (edge['TargetCo'] == 'Spain') or (edge['TargetCo'] == 'France') ) and ( edge['TransitMethod'] == 'sea' ):
+        #Western Mediterranean routes
+        edge['Safety'] = 0.4
+    elif ( (edge['TargetCo'] == 'Greece') ) and ( edge['TransitMethod'] == 'sea' ):
+        #Eastern Mediterranean routes
+        edge['Safety'] = 0.8
+    elif ( (edge['TargetCo'] in COS.middleEastCountries() ) ) and ( edge['TransitMethod'] == 'land' ):
+        #Middle East land routes
+        edge['Safety'] = 0.7
+    elif ( (edge['TargetCo'] in COS.africaCountries() ) ) and ( edge['TransitMethod'] == 'land' ):
+        #Northern Africa land routes
+        edge['Safety'] = 0.9
+    elif ( (edge['TargetCo'] in COS.centralEuropeCountries() ) ) and ( edge['TransitMethod'] == 'land' ):
+        #Eastern Europe land routes
+        edge['Safety'] = 0.9
+    elif ( (edge['TargetCo'] in COS.southernEuropeCountries() ) ) and ( edge['TransitMethod'] == 'land' ):
+        #Southern Europe land routes
+        edge['Safety'] = 0.9
+    elif ( (edge['TargetCo'] in COS.nordicCountries() ) ):
+        #Nordic Country routes
+        edge['Safety'] = 1.0
+    elif ( (edge['TargetCo'] in COS.westernEuropeCountries() ) ):
+        #Western Europe routes
+        edge['Safety'] = 1.0
+    else:
+        print 'WARNING: Unspecified edge safety for: ', edge
 
-
+## Place vertex properties on verticies:
 nativePopulation = COS.nativePopulationCountries()
 refugeeApplications = COS.refugeeApplicationsCountries()
 for country in countryList:
     graph.vs[countryDict[country]]['natPop'] = nativePopulation[country] 
     graph.vs[countryDict[country]]['refApps'] = refugeeApplications[country] 
-    # refugeeApplicationsCountries
+
     
 for vertexNumIndex in range( len(graph.vs) ):
     numRefsOverTime[ graph.vs[vertexNumIndex]['label'] ] = [ graph.vs[vertexNumIndex]['NumRefs'] ]
 
-#layout = graph.layout("auto")
 
-#graph = graph.as_directed()
-#visual_style = { "edge_width":6,
-#    'edge_arrow_size':.2,
-#    'edge_arrow_width':.2,
-#    "vertex_size": 255, 
-#    'bbox':(0, 0, 3300, 3300),
-#    'layout': layout,
-#    'margin': 168 }
-
-##layout = graph.layout("kamada_kawai")
-
-#print graph.vs[4], '\n'
 
 def costFuncCalculate(edge, update=True):
     ''' 
@@ -160,29 +178,18 @@ def popFlowCalculate(edge, update=True):
     
 
 if __name__ == '__main__':
-    
-    ## Update self cost functions (cost function for staying 
-    ## in the same place) For every vertex in the graph:
-    
-    #graph.vs['CostSelf'] = [ 1 for i in graph.vs['natPop'] ]
-    #graph.vs['natPop'] = [ 1 for i in graph.vs['natPop'] ]
-    
-    
-    #costFuncCalculate( graph.es[50] )    
-    #print '\n'
-#    popFlowCalculate( graph.es[20] ) 
-
-    
     timeStep = 0
 
-    
+    ## Simulate n time units through model: 
     for timeStep in range(90):
+        ## Update self cost function on each vertex:
         graph.vs['CostSelf'] = [ (i**2)/.15 for i in graph.vs['natPop'] ] 
+        
+        
         for edge in graph.es :
             costFuncCalculate(edge)
             popFlowCalculate(edge)
             
-
         for edge in graph.es :
             popFlow = edge['PopFlow']
             source = edge['Source']
@@ -212,7 +219,7 @@ if __name__ == '__main__':
     plt.suptitle('Diaspora over Time', fontsize = 20)
     plt.title('cost function: '+r'$\frac{pop_S * pop_T}{dist}$', y=.9,fontsize = 15)
     plt.legend()
-    plt.show()
+    #plt.show()
     
 #    historicalNumOfRefugees = []
 #    numRefs = 0
@@ -237,12 +244,16 @@ if __name__ == '__main__':
         for i in range(45):
             print graph.es[i]
     
-    if 1: ## Vertexes:
+    if 0: ## Vertexes:
         for i in range(30):
             print graph.vs[i]
         
-for vertex in graph.vs :
-    vertex["size"] = int( vertex['NumRefs']*.0001 )
+#for vertex in graph.vs :
+#    vertex["size"] = int( vertex['NumRefs']*.0001 )
+
+for edge in graph.es:
+    edge['width'] = edge['Safety']*10
+    edge['name'] = str( edge['Safety'] )
     
 layout = graph.layout("kk")
 igraph.plot(graph, layout=layout )#,  **visual_style)
