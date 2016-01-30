@@ -11,19 +11,28 @@ countryList = COS.coList()
 
 graph = igraph.Graph(vertex_attrs={"label": countryList}, edges=contiguousBorders, directed=True)
 for i, edge in enumerate( graph.es ):
-    edge['source']=contiguousBorders[i][0]
-    edge['sourceCo']=countryList[ contiguousBorders[i][0] ]
-    edge['target']=contiguousBorders[i][1]
-    edge['targetCo']=countryList[ contiguousBorders[i][1] ]
-    edge['transitMethod']='land'
+    edge['Source']=contiguousBorders[i][0]
+    edge['SourceCo']=countryList[ contiguousBorders[i][0] ]
+    edge['Target']=contiguousBorders[i][1]
+    edge['TargetCo']=countryList[ contiguousBorders[i][1] ]
+    edge['TransitMethod']='land'
 
 
-graph.vs['label_size'] = 8 ## Set fount size
-graph.vs['shape'] = 'circle'
+
 
 ### Add edges for boats:
 graph.es[0:len(contiguousBorders)]["color"] = "yellow"
-graph.add_edges( waterRoutes )
+for edge in waterRoutes:
+    source, target = edge
+    kwds = {'Source':source,
+        'Target':target,
+        'TargetCo':countryList[target],
+        'SourceCo':countryList[source],
+        'TransitMethod':'sea' }
+    graph.add_edge( source, target, **kwds )
+    
+graph.vs['label_size'] = 8 ## Set fount size
+graph.vs['shape'] = 'circle'
 
 ## Color countries by geographical region:
 vertexOpacity = .5
@@ -45,36 +54,43 @@ for vertexNumber in range(len(countryDict)):
     else:
         print 'WARNING: No color specified for: ',graph.vs[vertexNumber]['label']
 
-print graph.es.select(_source=1)[0]
-## Specify if it's a land or sea route: 
-for vertex in waterRoutes:
-    #print graph.es['source']#.attributes()
-    graph.es[vertex]['transitMethod']='sea'
+
+
     
 
 ## Place edge properties on edges
 countryDistances = COS.distanceBetweenCountries()
-for i, xCo in enumerate(countryList):
-    for j, yCo in enumerate(countryList):
-        vertex = (countryDict[xCo], countryDict[yCo])
-#        prior = graph.es[vertex]['transitMethod']
-        if (vertex in waterRoutes):
-            try:
-                graph.es[vertex]['distance'] = countryDistances[vertex]
-#                graph.es[vertex]['transitMethod'] = 'sea'+str(i)+' '+str(j)+xCo+yCo
-            except: 
-                print 'WARNING: Vertex: ', \
-                    vertex, ' describing: ', \
-                    xCo, yCo, ' does not exist'
-        elif (vertex in contiguousBorders): 
-            try:
-                    graph.es[vertex]['distance'] = countryDistances[vertex]
-#                    graph.es[vertex]['transitMethod'] = 'land'+str(i)+' '+str(j)+xCo+yCo
-            except: 
-                print 'WARNING: Vertex: ', \
-                    vertex, ' describing: ', \
-                    xCo, yCo, ' does not exist'
-#        print prior, graph.es[vertex]['transitMethod']
+for edge in graph.es:
+    for xCo in countryList:
+        for yCo in countryList:
+            if (edge['SourceCo']==xCo) and (edge['TargetCo']==yCo):
+                print 'Hi!'
+                edge['Distance'] = countryDistances[(countryDict[xCo],countryDict[yCo])]
+        #vertex = (countryDict[xCo], countryDict[yCo])
+#        try:
+        #sources = graph.es.select(_between=vertex)
+        #print 'src: ',sources
+            #sources.es['Target'][vertex[1]]['Distance'] = countryDistances[vertex]
+#        except:
+#            pass;
+            #print vertex
+        
+        
+        
+#        if (vertex in waterRoutes):
+#            try:
+#                graph.es[vertex]['distance'] = countryDistances[vertex]
+#            except: 
+#                print 'WARNING: Vertex: ', \
+#                    vertex, ' describing: ', \
+#                    xCo, yCo, ' does not exist'
+#        elif (vertex in contiguousBorders): 
+#            try:
+#                    graph.es[vertex]['distance'] = countryDistances[vertex]
+#            except: 
+#                print 'WARNING: Vertex: ', \
+#                    vertex, ' describing: ', \
+#                    xCo, yCo, ' does not exist'
 
 nativePopulation = COS.nativePopulationCountries()
 for country in countryList:
@@ -94,6 +110,12 @@ for country in countryList:
 
 ##layout = graph.layout("kamada_kawai")
 
-print graph.vs[4], '\n'
+#print graph.vs[4], '\n'
+
+if __name__ == '__main__':
+    for i in range(45):
+        print graph.es[i]
+    
+    
 
 igraph.plot(graph)#,  **visual_style)
