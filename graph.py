@@ -83,32 +83,43 @@ for edge in graph.es:
     if ( (edge['TargetCo'] == 'Italy') or (edge['TargetCo'] == 'Malta') ) and ( edge['TransitMethod'] == 'sea' ):
         #Central Mediterranean routes
         edge['Safety'] = 0.3
+        edge['MoneyCost'] = 0.8
     elif ( (edge['TargetCo'] == 'Spain') or (edge['TargetCo'] == 'France') ) and ( edge['TransitMethod'] == 'sea' ):
         #Western Mediterranean routes
         edge['Safety'] = 0.4
+        edge['MoneyCost'] = 1.0
     elif ( (edge['TargetCo'] == 'Greece') ) and ( edge['TransitMethod'] == 'sea' ):
         #Eastern Mediterranean routes
         edge['Safety'] = 0.8
+        edge['MoneyCost'] = 0.6
     elif ( (edge['TargetCo'] in COS.middleEastCountries() ) ) and ( edge['TransitMethod'] == 'land' ):
         #Middle East land routes
         edge['Safety'] = 0.7
+        edge['MoneyCost'] = 0.2
     elif ( (edge['TargetCo'] in COS.africaCountries() ) ) and ( edge['TransitMethod'] == 'land' ):
         #Northern Africa land routes
         edge['Safety'] = 0.9
+        edge['MoneyCost'] = 0.2
     elif ( (edge['TargetCo'] in COS.centralEuropeCountries() ) ) and ( edge['TransitMethod'] == 'land' ):
         #Eastern Europe land routes
         edge['Safety'] = 0.9
+        edge['MoneyCost'] = 0.2
     elif ( (edge['TargetCo'] in COS.southernEuropeCountries() ) ) and ( edge['TransitMethod'] == 'land' ):
         #Southern Europe land routes
         edge['Safety'] = 0.9
+        edge['MoneyCost'] = 0.2
     elif ( (edge['TargetCo'] in COS.nordicCountries() ) ):
         #Nordic Country routes
         edge['Safety'] = 1.0
+        edge['MoneyCost'] = 0.5
     elif ( (edge['TargetCo'] in COS.westernEuropeCountries() ) ):
         #Western Europe routes
         edge['Safety'] = 1.0
+        edge['MoneyCost'] = 0.5
     else:
         print 'WARNING: Unspecified edge safety for: ', edge
+        
+
 
 ## Place vertex properties on verticies:
 nativePopulation = COS.nativePopulationCountries()
@@ -252,8 +263,8 @@ if __name__ == '__main__':
 #    vertex["size"] = int( vertex['NumRefs']*.0001 )
 
 for edge in graph.es:
-    edge['width'] = edge['Safety']*10
-    edge['name'] = str( edge['Safety'] )
+    edge['width'] = edge['MoneyCost']*10
+    edge['name'] = str( edge['MoneyCost'] )
     
 layout = graph.layout("kk")
 igraph.plot(graph, layout=layout )#,  **visual_style)
