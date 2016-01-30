@@ -46,28 +46,23 @@ for vertexNumber in range(len(countryDict)):
         print 'WARNING: No color specified for: ',graph.vs[vertexNumber]['label']
 
 
-print graph.vs[(3,5)]
-
-#######
-#def distancesBetweenCountries():
-#    countryDict = countries()
-#    countryList= coList()
-#    waterRoutesList = waterRoutes(countryDict)
-#    landRoutesList = contiguousBorders(countryDict)
+## Place edge properties on edges
 countryDistances = COS.distanceBetweenCountries()
 for xCo in countryList:
     for yCo in countryList:
         vertex = (countryDict[xCo], countryDict[yCo])
         if (vertex in waterRoutes) or (vertex in contiguousBorders):
             try:
-                graph.vs[vertex]['length'] = countryDistances[vertex]
+                graph.es[vertex]['distance'] = countryDistances[vertex]
             except: 
-                print 'Match at: ', vertex, ' or: ', xCo, yCo
-#            graph.vs[vertex]['length']=countryDistances[vertex]
-#            pass; ## TODO 
+                print 'WARNING: Vertex: ', \
+                    vertex, ' describing: ', \
+                    xCo, yCo, ' does not exist'
 
-######
-
+nativePopulation = COS.nativePopulationCountries()
+for country in countryList:
+    graph.vs[countryDict[country]]['natPop'] = nativePopulation[country]
+    
 
 #layout = graph.layout("auto")
 

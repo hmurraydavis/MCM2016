@@ -343,7 +343,47 @@ def distanceBetweenCountries():
 #    print distances
     return distances
 
-
+def nativePopulationCountries(): 
+    countries = {'Syria': 0,
+        'Turkey': 75932348.00,
+        'Greece': 11030000.00,
+        'Bulgaria': 6924716,
+        'Romania': 21729871,
+        'Serbia': 7209764,
+        'Macedonia': 2091719,
+        'Albania': 2894475,
+        'Montenegro': 650036,
+        'Bosnia': 3871000,
+        'Hungary': 9919128,
+        'Croatia': 4470534.00,
+        'Slovenia': 2061000,
+        'Italy': 61070224,
+        'Switzerland': 8139600,
+        'Austria': 8223062,
+        'Germany': 82652256,
+        'Czech Republic': 10538300,
+        'Slovakia': 5417000,
+        'Poland': 38020000.00,
+        'Finland': 5268799,
+        'Sweden': 9644864,
+        'Norway': 5109059,
+        'Denmark': 5617000,
+        'Netherlands': 16860000.00,
+        'Belgium': 11204000,
+        'France': 64641279,
+        'UK': 64597000,
+        'Spain': 46439864,
+        'Portugal': 10401000,
+        'Malta': 412655,
+        'Morocco': 32987206,
+        'Algeria': 38700000,
+        'Tunisia': 10937521,
+        'Libya': 6244174,
+        'Egypt': 83386739,
+        'Israel': 36,
+        'Jordan': 6607000,
+        'Lebanon': 4500000}
+    return countries
 
 
 
