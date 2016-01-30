@@ -125,10 +125,12 @@ for edge in graph.es:
 nativePopulation = COS.nativePopulationCountries()
 refugeeApplications = COS.refugeeApplicationsCountries()
 safetyCountries = COS.safetyCountries()
+gniCountries = COS.gniPerCapitaCountries()
 for country in countryList:
     graph.vs[countryDict[country]]['natPop'] = nativePopulation[country] 
     graph.vs[countryDict[country]]['refApps'] = refugeeApplications[country] 
     graph.vs[countryDict[country]]['SafetyCo'] = safetyCountries[country] 
+    graph.vs[countryDict[country]]['GNI'] = gniCountries[country] 
 
     
 for vertexNumIndex in range( len(graph.vs) ):
