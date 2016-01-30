@@ -471,6 +471,48 @@ def refugeeApplicationsCountries():
         'Jordan': 20693,
         'Lebanon': 10851}
     return countries
+    
+def gniPerCapitaCountries(): 
+    countries = {'Syria': 5090.00, ## <-- Suspect value
+        'Turkey': 10830.00, 
+        'Greece': 22680.00,
+        'Bulgaria': 7620.00,
+        'Romania': 9520.00,
+        'Serbia': 5820.00,
+        'Macedonia': 5150.00,
+        'Albania': 4450.00,
+        'Montenegro': 7320.00,
+        'Bosnia': 4760.00,
+        'Hungary': 13340.00,
+        'Croatia': 12980.00,
+        'Slovenia': 23580.00,
+        'Italy': 34270.00,
+        'Switzerland': 88120.00,
+        'Austria': 49670.00,
+        'Germany': 47640.00,
+        'Czech Republic': 18370.00,
+        'Slovakia': 17750.00,
+        'Poland': 13690.00,
+        'Finland': 48420.00,
+        'Sweden': 61610.00,
+        'Norway': 103630.00,
+        'Denmark': 61310.00,
+        'Netherlands': 51890.00,
+        'Belgium': 47260.00,
+        'France': 42960.00,
+        'UK': 43430.00,
+        'Spain': 29440.00,
+        'Portugal': 21360.00,
+        'Malta': 21000.00,
+        'Morocco': 3070.00, 
+        'Algeria': 5490.00, 
+        'Tunisia': 4230.00, 
+        'Libya': 7820.00, 
+        'Egypt': 3050.00, 
+        'Israel': 35320.00,
+        'Jordan': 5160.00,
+        'Lebanon': 10030.00}
+    return countries
 
 
 if __name__ == '__main__':
@@ -478,5 +520,5 @@ if __name__ == '__main__':
     #print contiguousBorders(countries)
     #print coList()
     distances = distanceBetweenCountries()
-    print distances[(1,2)]
+    print gniPerCapitaCountries()
 
