@@ -556,7 +556,51 @@ def unemploymentCountries():
         'Lebanon': 0.06}
     return countries
 
-
+def educationCountries(): 
+    countries= {"'Germany'": 0.044,
+    'Jordan': 0.0496, 
+    'Ireland': 0.057, 
+    'Albania': 0.035,
+    'SlovakRepublic': 0.038,
+    'CzechRepublic': 0.044, 
+    'Bulgaria': 0.036, 
+    'Tunisia': 0.0622, 
+    'France': 0.056, 
+    'Malta': 0.0676,
+    'Italy': 0.042,
+    'Poland': 0.048, 
+    'Estonia': 0.052, 
+    'Croatia': 0.042, 
+    'Netherlands': 0.05, 
+    'Sweden': 0.062, 
+    'Macedonia': 0.066, 
+    'Greece': 0.04,
+    'Morocco': 0.0538, 
+    'Bosnia': 0.0, 
+    'Austria': 0.055, 
+    'Hungary': 0.044, 
+    'Luxembourg': 0.043, 
+    'Norway': 0.073, 
+    'Portugal': 0.051, 
+    'UnitedKingdom': 0.056, 
+    'Lebanon': 0.0257, 
+    'Spain': 0.053, 
+    'Denmark': 0.079, 
+    'Slovenia': 0.053, 
+    'Switzerland': 0.056, 
+    'Israel': 0.056, 
+    'Algeria': 0.0434, 
+    'Turkey': 0.034, 
+    'Serbia': 0.044, 
+    'Montenegro': 0.0,
+    'Romania': 0.0299, 
+    'Egypt': 0.0376, 
+    'Syria': 0.0513, 
+    'Belgium': 0.064, 
+    'Libya': 0.0226,
+    'Finland': 0.063}
+    return countries
+    
 if __name__ == '__main__':
     #countries = countries()
     #print contiguousBorders(countries)
