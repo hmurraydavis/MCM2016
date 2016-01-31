@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import scipy.stats as stats
 import pprint
 import tabulate
+import math
 
 
 countryDict = COS.countries()
@@ -142,6 +143,7 @@ for country in countryList:
     graph.vs[countryDict[country]]['Education'] = educationCountries[country] 
     graph.vs[countryDict[country]]['Health'] = healthCountries[country] 
     graph.vs[countryDict[country]]['GDPHealth'] = healthGDPCountries[country] 
+    graph.vs[countryDict[country]]['RefCap'] = graph.vs[countryDict[country]]['natPop']/1000 ## TODO: Replace with actual refugee quotas!!
 
     
 for vertexNumIndex in range( len(graph.vs) ):
@@ -149,7 +151,7 @@ for vertexNumIndex in range( len(graph.vs) ):
 
 
 
-def costFuncCalculate(edge, update=True):
+def costFuncGravityCalculate(edge, update=True):
     ''' 
     Calculate the cost for a given edge.
     Option to automatically update the "Cost" attribute for the edge. Default behavior.
@@ -171,6 +173,77 @@ def costFuncCalculate(edge, update=True):
     if update:
         edge['Cost'] = cost
     return cost
+
+    
+def costFuncMSIMCalculate(edge, update=True):
+    ''' 
+    Calculate the cost for a given edge using a heavily modified Spacial 
+    Interaction Model ("Jessie" model).
+    Option to automatically update the "Cost" attribute for the edge. 
+    Default behavior.
+    
+    INPUT: edge : indivigual igraph edge object.
+        *update : Boolian. If True, execution will update the Cost attribute 
+        of the given edge.
+    
+    RETURNS: cost : The evaluated value of the cost function.
+    '''
+    source = edge['Source']
+    target = edge['Target']
+    
+#    a = source
+#    b = target
+#    
+
+#    st = edge['Safety']
+#    resourcesS = resourcesCalculate( graph.vs[source] )
+#    efS = graph.vs[source]['NumRefs']
+#    inad = edge['Distance']
+#    c = edge['Cost']  cost for travel betweenaandb
+#    capS = graph.vs['RefCap']
+#    popS graph.vs['natPop']
+#    outnS = graph.degree( graph.vs[source] ) 
+#    
+#    if edge['TransitMethod']=='land': val = 1.0
+#    if edge['TransitMethod']=='sea': val = 0.75
+#    
+#    land(a; b):  1 if the edge is land, 0.75 if the edge is sea
+    
+    if edge['TransitMethod']=='land': landval = 1.0
+    elif edge['TransitMethod']=='sea': landval = 0.75 
+    else: print 'WARNING: No transit method defined for: ', edge
+    
+    if edge['TargetCo'] in COS.endCountryList():
+        ## Equation D case:
+        p1 = edge['Safety'] * \
+            graph.vs[target]['SafetyCo'] * \
+            resourcesCalculate( graph.vs[target], update=False ) * \
+            graph.vs[target]['NumRefs'] * \
+            graph.vs[target]['natPop'] * \
+            landval
+        
+        den = math.log( edge['Distance'] ) * \
+            edge['MoneyCost'] * \
+            resourcesCalculate( graph.vs[source], update=False ) *\
+            graph.vs[source]['natPop']
+            
+        endmult = 1 - \
+            ( graph.vs[target]['NumRefs'] / \
+            graph.vs[target]['RefCap'] )
+        
+        val = p1 * endmult / den
+        edge['Cost'] = val
+            
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        
     
 def popFlowCalculate(edge, update=True):
     ''' 
@@ -199,21 +272,39 @@ def popFlowCalculate(edge, update=True):
         edge['PopFlow'] = popFlow
     #print 'Self Cost: ', graph.vs[source]['CostSelf']
     return popFlow
+    
+    
+def resourcesCalculate(vertex, update=True):
+    resources = ( vertex['GNI']* \
+    (1 - vertex['Unemployment']) * \
+    vertex['Education'] * \
+    vertex['LifeExp'] * \
+    vertex['GDPHealth'] ) * 10**(-7)
+    if update==True:
+        vertex['Resources'] = resources
+    return resources
 
     
     
 
 if __name__ == '__main__':
     timeStep = 0
+    
+    print resourcesCalculate( graph.vs[3] )
 
     ## Simulate n time units through model: 
     for timeStep in range(90):
         ## Update self cost function on each vertex:
         graph.vs['CostSelf'] = [ (i**2)/.15 for i in graph.vs['natPop'] ] 
         
+        for vertex in graph.vs:
+            resourcesCalculate(vertex)
+        
         
         for edge in graph.es :
-            costFuncCalculate(edge)
+            print graph.vs[ edge['Target'] ]
+            costFuncMSIMCalculate(edge)
+            #costFuncGravityCalculate(edge)
             popFlowCalculate(edge)
             
         for edge in graph.es :
@@ -301,7 +392,7 @@ if 0:
 
     print tabulate.tabulate( allRows, tablefmt = 'latex')
 
-if 1: 
+if 0: 
     allRows = [ ['Country Name', 'Time 2', 'Time 5', 'Time 10', 'Time 20', 'Time 50' ] ]
     for country in countryList:
         row = []
