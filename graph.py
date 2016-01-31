@@ -144,6 +144,7 @@ for country in countryList:
     graph.vs[countryDict[country]]['Health'] = healthCountries[country] 
     graph.vs[countryDict[country]]['GDPHealth'] = healthGDPCountries[country] 
     graph.vs[countryDict[country]]['RefCap'] = graph.vs[countryDict[country]]['natPop']/1000 ## TODO: Replace with actual refugee quotas!!
+    
 
     
 for vertexNumIndex in range( len(graph.vs) ):
@@ -200,20 +201,23 @@ def costFuncMSIMCalculate(edge, update=True):
         ## Equation D case (end countries):
         pt1 = edge['Safety'] * \
             graph.vs[target]['SafetyCo'] * \
-            resourcesCalculate( graph.vs[target], update=False ) * \
+            graph.vs[target]['Resources'] * \
             graph.vs[target]['NumRefs'] * \
             graph.vs[target]['natPop'] * \
             landval
+            
         
-        den = math.log( edge['Distance'] ) * \
+        
+        den = ( math.log( edge['Distance'] ) + 2 ) * \
             edge['MoneyCost'] * \
-            resourcesCalculate( graph.vs[source], update=False ) *\
-            graph.vs[source]['natPop']
+            graph.vs[source]['Resources'] *\
+            graph.vs[source]['natPop'] * \
+            graph.vs[source]['SafetyCo']
+        
             
         endmult = 1 - \
             ( graph.vs[target]['NumRefs'] / \
-            graph.vs[target]['RefCap'] )
-        
+            float( graph.vs[target]['RefCap'] ) )
         val = pt1 * endmult / den
         edge['Cost'] = val
         return val
@@ -223,19 +227,25 @@ def costFuncMSIMCalculate(edge, update=True):
         ## Equation C case (Transition countries):
         pt1 = edge['Safety'] * \
             graph.vs[target]['SafetyCo'] * \
-            resourcesCalculate( graph.vs[target], update=False ) * \
+            graph.vs[target]['Resources'] * \
             graph.vs[target]['NumRefs'] * \
-            graph.vs[target]['natPop'] * \
             landval
-            
+        
+        print 'p1: ', pt1
         den = edge['Distance'] * \
             edge['MoneyCost'] * \
-            resourcesCalculate( graph.vs[source], update=False )#graph.vs[source]['Resources']
+            resourcesCalculate( graph.vs[source], update=False ) * \
+            graph.vs[source]['SafetyCo']
+        print 'den: ', den
         
         
         endmult = 1 - \
             ( graph.vs[target]['NumRefs'] / \
-            graph.vs[target]['RefCap'] )
+            float( graph.vs[target]['RefCap'] ) )
+            
+        print 'end mult', endmult
+            
+        print 'Jessie is the definative best.'
             
         val = pt1 * endmult / den
         edge['Cost'] = val
@@ -284,6 +294,7 @@ def popFlowCalculate(edge, update=True):
     
     
 def resourcesCalculate(vertex, update=True):
+    ''' Validated by Jessie hand math.'''
     resources = ( vertex['GNI']* \
     (1 - vertex['Unemployment']) * \
     vertex['Education'] * \
@@ -291,129 +302,185 @@ def resourcesCalculate(vertex, update=True):
     vertex['GDPHealth'] ) * 10**(-7)
     if update==True:
         vertex['Resources'] = resources
-## TODO: Delete after Jessie checks math
-#    else: print 'Hi silly.'
-#    print '^ \n  ',vertex
-#    print 'Computed resources for ', vertex['label'], ' are: ', resources
     return resources
 
-    
-    
+def selfCostMSIMcalculate(vertex, update=True):
+    if vertex['label'] in COS.originCoList():
+        cost = .3
+    else: 
+        n1 = 2 * vertex['SafetyCo'] * \
+            vertex['Resources'] * \
+            vertex['NumRefs']**2
+        
+        adjacents = graph.adjacent( target ) #returns edge labels
+        
+        adjTargets = graph.vs[ graph.es[adjacents]['Target'] ]
+
+        
+        ## Do the weird pi cumulitive product thing:     
+        distProd = 1
+        for distance in graph.es[adjacents]['Distance']:
+            distProd = distProd * distance
+            
+        lnPi = math.log(distProd)
+        
+        numeratorMoneySigma = sum( graph.es[adjacents]['MoneyCost'] )
+        denomSafetySigma = sum( graph.es[adjacents]['Safety'] ) + \
+            sum( adjTargets['SafetyCo'] )
+
+        denomResourceSigma = sum( adjTargets['Resources'] )
+        
+        cost = n1 * distProd * numeratorMoneySigma / \
+            vertex['RefCap'] / denomSafetySigma / denomResourceSigma
+    if update==True:
+        vertex['CostSelf'] = cost
+    return cost
+            
+        
 
 if __name__ == '__main__':
     timeStep = 0
-
-    ## Simulate n time units through model: 
-    for timeStep in range(90):
-        ## Update self cost function on each vertex:
-        graph.vs['CostSelf'] = [ (i**2)/.15 for i in graph.vs['natPop'] ] 
+    
+    #Set resources on vertexes
+    for vertex in graph.vs:
+        resourcesCalculate(vertex)
         
-        for vertex in graph.vs:
-            resourcesCalculate(vertex)
-        
-        
-        for edge in graph.es :
-            costFuncMSIMCalculate(edge)
-            #costFuncGravityCalculate(edge)
-            popFlowCalculate(edge)
-            
-        for edge in graph.es :
-            popFlow = edge['PopFlow']
-            source = edge['Source']
-            target = edge['Target'] 
-                
-            graph.vs[target]['NumRefs'] = graph.vs[target]['NumRefs'] + popFlow
-            graph.vs[source]['NumRefs'] = graph.vs[source]['NumRefs'] - popFlow
-
-        
-        for vertexNumIndex in range( len(graph.vs) ):
-                numRefsOverTime[ graph.vs[vertexNumIndex]['label'] ].append( graph.vs[vertexNumIndex]['NumRefs'] )
-
-        
-    #hijessie = numRefsOverTime.keys()   
-    #pprint.pprint( zip( numRefsOverTime.keys(), [numRefsOverTime[co][0] for co in hijessie] ) )
-    #print( numRefsOverTime )
+    #Set cost function on vertexes (cost function depends on resources 
+    #being throughout)the graph, so it needs to be run after calling 
+    #resourcesCalculate(vertex) on the whole graph!!:
+    for vertex in graph.vs:
+        selfCostMSIMcalculate(vertex)
+    
+    #print selfCostMSIMcalculate( graph.vs[1] )
+    
+    if 0: ## TODO: Delete after Jessie checks math!
+        num = 4#50
+        print 'Calculated cost is: ', costFuncMSIMCalculate( graph.es[num] )
+        print graph.es[num]
+        print 'Source: ', graph.vs[ graph.es[num]['Source'] ]
+        print 'Target: ', graph.vs[ graph.es[num]['Target'] ]
 
 
-    plotList = ['Sweden','Italy', 'Greece', 'France', 'Germany', 'UK', 'Syria']#['Turkey', 'Serbia', 'Hungary', 'Poland', 'Austria', 'France', 'UK']#['Algeria', 'Greece', 'Italy', 'Germany', 'Sweden', 'UK', 'Portugal']#['Sweden','Norway','Finland' ,'Italy', 'Austria', 'Greece', 'Syria','Poland', 'France', 'Germany', 'UK', 'Portugal']
-    for country in plotList:
-        plt.plot(numRefsOverTime[country], linewidth=6, alpha=.75, label=country) 
-#    plt.plot(numRefsOverTime['Syria'], linewidth=25, alpha=.9, color='#2F4172', label='Syria' ) 
-#    plt.plot(numRefsOverTime['Norway'],  linewidth=11, alpha=.8, color='#2C8437', label='Norway' ) 
-#    plt.plot(numRefsOverTime['Finland'], linewidth=3, alpha=1, color='#AA6E39', label='Finland' ) 
-    plt.xlabel('Time', fontsize = 18)
-    plt.ylabel('Number of Refugees', fontsize = 18)
-    plt.suptitle('Diaspora over Time', fontsize = 20)
-    plt.title('cost function: '+r'$\frac{pop_S * pop_T}{dist}$', y=.9,fontsize = 15)
-    plt.legend()
-    #plt.show()
-    
-#    historicalNumOfRefugees = []
-#    numRefs = 0
-#    for timestep in range( len( numRefsOverTime[country] ) ):
-#        for country in countryList:
-#            numRefs = numRefs + numRefsOverTime[country][timeStep]
-#            #print 'no refs: ', numRefs
-#        
-#        historicalNumOfRefugees.append(numRefs)
-#        numRefs = 0
-#    #print 'hist: ',historicalNumOfRefugees
-    
-    if 0:
-        plt.plot(historicalNumOfRefugees)
-        plt.show()
-        
-            #print len( numRefsOverTime[country] )
-    
-    
-    
-    if 0: ## Edges
-        for i in range(45):
-            print graph.es[i]
-    
-    if 0: ## Vertexes:
-        for i in range(30):
-            print graph.vs[i]
-        
+
+
+
+
+
+
+
+
+
+####    ## Simulate n time units through model: 
+####    for timeStep in range(90):
+####        ## Update self cost function on each vertex:
+####        graph.vs['CostSelf'] = [ (i**2)/.15 for i in graph.vs['natPop'] ] 
+####        
+####        for vertex in graph.vs:
+####            resourcesCalculate(vertex)
+####        
+####        
+####        for edge in graph.es :
+####            costFuncMSIMCalculate(edge)
+####            #costFuncGravityCalculate(edge)
+####            popFlowCalculate(edge)
+####            
+####        for edge in graph.es :
+####            popFlow = edge['PopFlow']
+####            source = edge['Source']
+####            target = edge['Target'] 
+####                
+####            graph.vs[target]['NumRefs'] = graph.vs[target]['NumRefs'] + popFlow
+####            graph.vs[source]['NumRefs'] = graph.vs[source]['NumRefs'] - popFlow
+
+####        
+####        for vertexNumIndex in range( len(graph.vs) ):
+####                numRefsOverTime[ graph.vs[vertexNumIndex]['label'] ].append( graph.vs[vertexNumIndex]['NumRefs'] )
+
+####        
+####    #hijessie = numRefsOverTime.keys()   
+####    #pprint.pprint( zip( numRefsOverTime.keys(), [numRefsOverTime[co][0] for co in hijessie] ) )
+####    #print( numRefsOverTime )
+
+
+####    plotList = ['Sweden','Italy', 'Greece', 'France', 'Germany', 'UK', 'Syria']#['Turkey', 'Serbia', 'Hungary', 'Poland', 'Austria', 'France', 'UK']#['Algeria', 'Greece', 'Italy', 'Germany', 'Sweden', 'UK', 'Portugal']#['Sweden','Norway','Finland' ,'Italy', 'Austria', 'Greece', 'Syria','Poland', 'France', 'Germany', 'UK', 'Portugal']
+####    for country in plotList:
+####        plt.plot(numRefsOverTime[country], linewidth=6, alpha=.75, label=country) 
+#####    plt.plot(numRefsOverTime['Syria'], linewidth=25, alpha=.9, color='#2F4172', label='Syria' ) 
+#####    plt.plot(numRefsOverTime['Norway'],  linewidth=11, alpha=.8, color='#2C8437', label='Norway' ) 
+#####    plt.plot(numRefsOverTime['Finland'], linewidth=3, alpha=1, color='#AA6E39', label='Finland' ) 
+####    plt.xlabel('Time', fontsize = 18)
+####    plt.ylabel('Number of Refugees', fontsize = 18)
+####    plt.suptitle('Diaspora over Time', fontsize = 20)
+####    plt.title('cost function: '+r'$\frac{pop_S * pop_T}{dist}$', y=.9,fontsize = 15)
+####    plt.legend()
+####    #plt.show()
+####    
+#####    historicalNumOfRefugees = []
+#####    numRefs = 0
+#####    for timestep in range( len( numRefsOverTime[country] ) ):
+#####        for country in countryList:
+#####            numRefs = numRefs + numRefsOverTime[country][timeStep]
+#####            #print 'no refs: ', numRefs
+#####        
+#####        historicalNumOfRefugees.append(numRefs)
+#####        numRefs = 0
+#####    #print 'hist: ',historicalNumOfRefugees
+####    
+####    if 0:
+####        plt.plot(historicalNumOfRefugees)
+####        plt.show()
+####        
+####            #print len( numRefsOverTime[country] )
+####    
+####    
+####    
+####    if 0: ## Edges
+####        for i in range(45):
+####            print graph.es[i]
+####    
+####    if 0: ## Vertexes:
+####        for i in range(30):
+####            print graph.vs[i]
+####        
 for vertex in graph.vs :
-    vertex["size"] = int( vertex['SafetyCo']*26 )
+    vertex["size"] = int( vertex['CostSelf']*2 )
 
-#for edge in graph.es:
-#    edge['width'] = edge['MoneyCost']*10
+for edge in graph.es:
+    edge['width'] = edge['Cost']*10
 #    edge['name'] = str( edge['MoneyCost'] )
     
 layout = graph.layout("kk")
-#igraph.plot(graph, layout=layout )#,  **visual_style)
+igraph.plot(graph, layout=layout )#,  **visual_style)
 
 
-if 0: 
-    allRows = [ ['Country Name', 'Native Population', 'Refugee Applications', 'Safety', 'GNI per capita', 'Unemployment' ] ]
-    for country in countryList:
-        row = []
-        row = row + [country]
-        row = row + [ str(nativePopulation[country])  ]
-        row = row + [ str(refugeeApplications[country]) ]
-        row = row + [ str(safetyCountries[country]) ]
-        row = row + [ str(gniCountries[country]) ]
-        row = row + [ str(unemploymentCountries[country]) ]
-        
-        allRows.append( row )
+####if 0: 
+####    allRows = [ ['Country Name', 'Native Population', 'Refugee Applications', 'Safety', 'GNI per capita', 'Unemployment' ] ]
+####    for country in countryList:
+####        row = []
+####        row = row + [country]
+####        row = row + [ str(nativePopulation[country])  ]
+####        row = row + [ str(refugeeApplications[country]) ]
+####        row = row + [ str(safetyCountries[country]) ]
+####        row = row + [ str(gniCountries[country]) ]
+####        row = row + [ str(unemploymentCountries[country]) ]
+####        
+####        allRows.append( row )
 
 
-    print tabulate.tabulate( allRows, tablefmt = 'latex')
+####    print tabulate.tabulate( allRows, tablefmt = 'latex')
 
-if 0: 
-    allRows = [ ['Country Name', 'Time 2', 'Time 5', 'Time 10', 'Time 20', 'Time 50' ] ]
-    for country in countryList:
-        row = []
-        row = row + [country]
-        row = row + [ '{0:.1f}'.format( numRefsOverTime[country][2])  ]
-        row = row + [ '{0:.1f}'.format(numRefsOverTime[country][5]) ]
-        row = row + [ '{0:.1f}'.format(numRefsOverTime[country][10]) ]
-        row = row + [ '{0:.1f}'.format(numRefsOverTime[country][20]) ]
-        row = row + [ '{0:.1f}'.format(numRefsOverTime[country][50]) ]
-        
-        allRows.append( row )
+####if 0: 
+####    allRows = [ ['Country Name', 'Time 2', 'Time 5', 'Time 10', 'Time 20', 'Time 50' ] ]
+####    for country in countryList:
+####        row = []
+####        row = row + [country]
+####        row = row + [ '{0:.1f}'.format( numRefsOverTime[country][2])  ]
+####        row = row + [ '{0:.1f}'.format(numRefsOverTime[country][5]) ]
+####        row = row + [ '{0:.1f}'.format(numRefsOverTime[country][10]) ]
+####        row = row + [ '{0:.1f}'.format(numRefsOverTime[country][20]) ]
+####        row = row + [ '{0:.1f}'.format(numRefsOverTime[country][50]) ]
+####        
+####        allRows.append( row )
 
 
-    print tabulate.tabulate( allRows, tablefmt = 'latex')
+####    print tabulate.tabulate( allRows, tablefmt = 'latex')
