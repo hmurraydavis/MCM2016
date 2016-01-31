@@ -626,7 +626,7 @@ def lifeExpCountries():
     'Luxembourg': 81.7,
     'Norway': 81.45,
     'Portugal': 80.37,
-    'UnitedKingdom': 80.96,
+    'UK': 80.96,
     'Lebanon': 80.13,
     'Spain': 82.43,
     'Denmark': 80.3,
