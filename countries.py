@@ -515,7 +515,7 @@ def gniPerCapitaCountries():
     return countries
 
 def unemploymentCountries(): 
-    countries = {'Syria': 1, 
+    countries = {'Syria': .75, 
         'Turkey': 0.11, 
         'Greece': 0.24,
         'Bulgaria': 0.10,
@@ -576,7 +576,7 @@ def educationCountries():
     'Macedonia': 0.066, 
     'Greece': 0.04,
     'Morocco': 0.0538, 
-    'Bosnia': 0.0, 
+    'Bosnia': 0.01, 
     'Austria': 0.055, 
     'Hungary': 0.044, 
     'Luxembourg': 0.043, 
@@ -592,7 +592,7 @@ def educationCountries():
     'Algeria': 0.0434, 
     'Turkey': 0.034, 
     'Serbia': 0.044, 
-    'Montenegro': 0.0,
+    'Montenegro': 0.01,
     'Romania': 0.0299, 
     'Egypt': 0.0376, 
     'Syria': 0.0513, 
@@ -737,6 +737,22 @@ def healthGDPCountries():
     'Libya': 0.030, 
     'Finland': 0.071}
     return countries
+    
+    
+def transitionCoList (): 
+    return ['Turkey', 'Greece', 'Bulgaria', 'Romania', 'Serbia', 'Albania', 
+    'Macedonia', 'Montenegro', 'Bosnia', 'Croatia', 'Slovenia', 'Italy', 
+    'Slovakia', 'Poland', 'Malta', 'Lebanon', 'Israel', 'Jordan', 'Egypt', 
+    'Libya', 'Tunisia', 'Algeria']
+    
+def originCoList():
+    return [ 'Syria', 'Morocco', 'Libya', 'Egypt', 'Jordan', 'Lebanon', 
+    'Turkey' ]
+    
+def endCountryList():
+    return [ 'UK', 'Sweden', 'Norway', 'Finland', 'Denmark', 'Germany', 
+    'Austria', 'France', 'Belgium', 'Netherlands', 'Portugal', 'Spain', 
+    'Switzerland', 'Hungary' ]
 if __name__ == '__main__':
     #countries = countries()
     #print contiguousBorders(countries)
