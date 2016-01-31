@@ -472,6 +472,52 @@ def refugeeApplicationsCountries():
         'Lebanon': 10851}
     return countries
     
+def refugeeEstimateCountries(): 
+    countries={'Germany': 500000,
+    'Jordan': 1400000,
+    'Ireland': 10250,
+    'Albania': 8000,
+    'SlovakRepublic': 2500,
+    'CzechRepublic': 3000,
+    'Bulgaria': 18000,
+    'Tunisia': 1000,
+    'France': 320000,
+    'Malta': 1500,
+    'Italy': 15000,
+    'Poland': 25000,
+    'Estonia': 86000,
+    'Croatia': 5000,
+    'Netherlands': 90000,
+    'Sweden': 225000,
+    'Macedonia': 3000,
+    'Greece': 37000,
+    'Morocco': 4000,
+    'Bosnia': 150000,
+    'Austria': 92000,
+    'Hungary': 50000,
+    'Luxembourg': 2000,
+    'Norway': 50000,
+    'Portugal': 1350,
+    'UnitedKingdom': 155000,
+    'Lebanon': 1200000,
+    'Spain': 17000,
+    'Denmark': 27000,
+    'Slovenia': 400,
+    'Switzerland': 80000,
+    'Israel': 45000,
+    'Algeria': 100000,
+    'Turkey': 2200000,
+    'Serbia': 250000,
+    'Montenegro': 15000,
+    'Romania': 2800,
+    'Egypt': 180000,
+    'Syria': 0,
+    'Belgium': 45000, 
+    'Libya': 40000,
+    'Finland': 15000}
+    
+    return countries
+
 def gniPerCapitaCountries(): 
     countries = {'Syria': 5090.00, ## <-- Suspect value
         'Turkey': 10830.00, 
