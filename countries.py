@@ -673,7 +673,7 @@ def healthCountries():
     'Luxembourg': 7981.0, 
     'Norway': 9715.0, 
     'Portugal': 2037.0, 
-    'UnitedKingdom': 3598.0, 
+    'UK': 3598.0, 
     'Lebanon': 631.0, 
     'Spain': 2581.0, 
     'Denmark': 6270.0, 
@@ -694,8 +694,7 @@ def healthCountries():
     return countries
 
 def healthGDPCountries():
-    countries=
-    {'Germany': 0.087, 
+    countries={'Germany': 0.087, 
     'Jordan': 0.048, 
     'Ireland': 0.060, 
     'Albania': 0.028, 
@@ -719,7 +718,7 @@ def healthGDPCountries():
     'Luxembourg': 0.059,
     'Norway': 0.082,
     'Portugal': 0.063, 
-    'UnitedKingdom': 0.076,
+    'UK': 0.076,
     'Lebanon': 0.036, 
     'Spain': 0.063,
     'Denmark': 0.091, 
@@ -732,7 +731,7 @@ def healthGDPCountries():
     'Montenegro': 0.037,
     'Romania': 0.043,
     'Egypt': 0.021,
-    'Syria': 0.015, "
+    'Syria': 0.015, 
     'Slovakia': 0.058, 
     'Belgium': 0.085,
     'Libya': 0.030, 
@@ -745,3 +744,5 @@ if __name__ == '__main__':
     distances = distanceBetweenCountries()
     print lifeExpCountries()
     print educationCountries()
+    print healthCountries()
+    print healthGDPCountries()

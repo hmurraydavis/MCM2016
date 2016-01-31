@@ -129,6 +129,8 @@ gniCountries = COS.gniPerCapitaCountries()
 unemploymentCountries = COS.unemploymentCountries()
 lifeExpectanciesCountries = COS.lifeExpCountries()
 educationCountries = COS.educationCountries()
+healthCountries = COS.healthCountries()
+healthGDPCountries = COS.healthGDPCountries()
 for country in countryList:
     graph.vs[countryDict[country]]['natPop'] = nativePopulation[country] 
     graph.vs[countryDict[country]]['refApps'] = refugeeApplications[country] 
@@ -137,6 +139,8 @@ for country in countryList:
     graph.vs[countryDict[country]]['Unemployment'] = unemploymentCountries[country]
     graph.vs[countryDict[country]]['LifeExp'] = lifeExpectanciesCountries[country] 
     graph.vs[countryDict[country]]['Education'] = educationCountries[country] 
+    graph.vs[countryDict[country]]['Health'] = healthCountries[country] 
+    graph.vs[countryDict[country]]['GDPHealth'] = healthGDPCountries[country] 
 
     
 for vertexNumIndex in range( len(graph.vs) ):
