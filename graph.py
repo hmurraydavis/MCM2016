@@ -288,10 +288,10 @@ def popFlowCalculate(edge, update=True):
 def resourcesCalculate(vertex, update=True):
     ''' Validated by Jessie hand math.'''
     resources = ( vertex['GNI']* \
-    (1 - vertex['Unemployment']) * \
-    vertex['Education'] * \
-    vertex['LifeExp'] * \
-    vertex['GDPHealth'] ) * 10**(-7)
+        (1 - vertex['Unemployment']) * \
+        vertex['Education'] * \
+        vertex['LifeExp'] * \
+        vertex['GDPHealth'] ) * 10**(-7)
     if update==True:
         vertex['Resources'] = resources
     return resources
@@ -369,6 +369,9 @@ def runModel(timeSpan):
         for edge in graph.es :
             updateRefugeePopulations(edge)
             
+        for vertex in graph.vs:
+            resourcesCalculate(vertex)
+            
 
         
         for vertexNumIndex in range( len(graph.vs) ):
@@ -383,29 +386,46 @@ def runModel(timeSpan):
     return {'NumRefs':numRefsOverTime, 
         'CostSelf':costSelfOverTime, 
         'Resources':resourcesOverTime}
+        
 
 
 
+def plotResultsFromList(resultsDict, plotList, label=''):
+    for country in plotList:
+        plt.plot(resultsDict[country], linewidth=6, alpha=.55, label=country) 
+    plt.xlabel('Time', fontsize = 18)
+    plt.ylabel('Number of Refugees', fontsize = 18)
+    plt.suptitle('Diaspora over Time', fontsize = 20)
+    plt.title(label, y=1,fontsize = 15)
+    plt.legend()
+    plt.show()
+
+## Finish instanciating graph:
+#Set resources on vertexes
+for vertex in graph.vs:
+    resourcesCalculate(vertex)
+    
+#Set cost function on vertexes (cost function depends on resources 
+#being throughout)the graph, so it needs to be run after calling 
+#resourcesCalculate(vertex) on the whole graph!!:
+for vertex in graph.vs:
+    selfCostMSIMcalculate(vertex)
 
     
 
 if __name__ == '__main__':
-    timeStep = 0
-    
-    #Set resources on vertexes
-    for vertex in graph.vs:
-        resourcesCalculate(vertex)
-        
-    #Set cost function on vertexes (cost function depends on resources 
-    #being throughout)the graph, so it needs to be run after calling 
-    #resourcesCalculate(vertex) on the whole graph!!:
-    for vertex in graph.vs:
-        selfCostMSIMcalculate(vertex)
+
     
     results = runModel(12)
     numRefsOverTime = results['NumRefs']
     costSelfOverTime = results['CostSelf']
     resourcesOverTime  = results['Resources']
+    
+    plotList = ['Sweden','Denmark', 'Greece', 'France', 'Germany', 'UK', 'Syria']#['Turkey', 'Serbia', 'Hungary', 'Poland', 'Austria', 'France', 'UK']#['Algeria', 'Greece', 'Italy', 'Germany', 'Sweden', 'UK', 'Portugal']#['Sweden','Norway','Finland' ,'Italy', 'Austria', 'Greece', 'Syria','Poland', 'France', 'Germany', 'UK', 'Portugal']
+        
+    plotResultsFromList(numRefsOverTime, plotList, label='Number of Refugees')
+    plotResultsFromList(costSelfOverTime, plotList, label='Cost Function')
+    plotResultsFromList(resourcesOverTime, plotList, label='Resources')
     
     if 0: ## TODO: Delete after Jessie checks math!
         num = 4#50
@@ -427,18 +447,7 @@ if __name__ == '__main__':
 
 
 
-####    plotList = ['Sweden','Italy', 'Greece', 'France', 'Germany', 'UK', 'Syria']#['Turkey', 'Serbia', 'Hungary', 'Poland', 'Austria', 'France', 'UK']#['Algeria', 'Greece', 'Italy', 'Germany', 'Sweden', 'UK', 'Portugal']#['Sweden','Norway','Finland' ,'Italy', 'Austria', 'Greece', 'Syria','Poland', 'France', 'Germany', 'UK', 'Portugal']
-####    for country in plotList:
-####        plt.plot(numRefsOverTime[country], linewidth=6, alpha=.75, label=country) 
-#####    plt.plot(numRefsOverTime['Syria'], linewidth=25, alpha=.9, color='#2F4172', label='Syria' ) 
-#####    plt.plot(numRefsOverTime['Norway'],  linewidth=11, alpha=.8, color='#2C8437', label='Norway' ) 
-#####    plt.plot(numRefsOverTime['Finland'], linewidth=3, alpha=1, color='#AA6E39', label='Finland' ) 
-####    plt.xlabel('Time', fontsize = 18)
-####    plt.ylabel('Number of Refugees', fontsize = 18)
-####    plt.suptitle('Diaspora over Time', fontsize = 20)
-####    plt.title('cost function: '+r'$\frac{pop_S * pop_T}{dist}$', y=.9,fontsize = 15)
-####    plt.legend()
-####    #plt.show()
+
 ####    
 #####    historicalNumOfRefugees = []
 #####    numRefs = 0
