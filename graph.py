@@ -13,7 +13,7 @@ contiguousBorders = COS.contiguousBorders(countryDict)
 waterRoutes = COS.waterRoutes(countryDict)
 countryList = COS.coList()
 
-numRefsOverTime = { country:[0] for country in countryList }
+
 
 
 graph = igraph.Graph(vertex_attrs={"label": countryList}, edges=contiguousBorders, directed=True)
@@ -147,8 +147,6 @@ for country in countryList:
     
 
     
-for vertexNumIndex in range( len(graph.vs) ):
-    numRefsOverTime[ graph.vs[vertexNumIndex]['label'] ] = [ graph.vs[vertexNumIndex]['NumRefs'] ]
 
 
 
@@ -231,21 +229,14 @@ def costFuncMSIMCalculate(edge, update=True):
             graph.vs[target]['NumRefs'] * \
             landval
         
-        print 'p1: ', pt1
         den = edge['Distance'] * \
             edge['MoneyCost'] * \
             resourcesCalculate( graph.vs[source], update=False ) * \
             graph.vs[source]['SafetyCo']
-        print 'den: ', den
-        
         
         endmult = 1 - \
             ( graph.vs[target]['NumRefs'] / \
             float( graph.vs[target]['RefCap'] ) )
-            
-        print 'end mult', endmult
-            
-        print 'Jessie is the definative best.'
             
         val = pt1 * endmult / den
         edge['Cost'] = val
@@ -284,6 +275,7 @@ def popFlowCalculate(edge, update=True):
     
     costs = [ graph.es[i]['Cost'] for i in adjacents]
     
+#    print 'costs denom: ', (sum(costs)+costSelf), '\n', graph.vs[source]
     frac = edge['Cost']/(sum(costs)+costSelf)
     popFlow = graph.vs[source]['NumRefs'] * frac
     #print popFlow, 'refugees from: ', edge['SourceCo'], ' to ', edge['TargetCo']
@@ -351,8 +343,17 @@ def updateRefugeePopulations(edge):
 
 
 def runModel(timeSpan):
+    numRefsOverTime = { country:[0] for country in countryList }
+    costSelfOverTime = { country:[0] for country in countryList }
+    resourcesOverTime = { country:[0] for country in countryList }
+    
+    for vertexNumIndex in range( len(graph.vs) ):
+        numRefsOverTime[ graph.vs[vertexNumIndex]['label'] ] = [ graph.vs[vertexNumIndex]['NumRefs'] ]
+        costSelfOverTime[ graph.vs[vertexNumIndex]['label'] ] = [ graph.vs[vertexNumIndex]['CostSelf'] ] 
+        resourcesOverTime[ graph.vs[vertexNumIndex]['label'] ] = [ graph.vs[vertexNumIndex]['Resources'] ]   
+    
     ## Simulate n time units through model: 
-    for timeStep in range(90):
+    for timeStep in range(timeSpan):
         ## Update self cost function on each vertex:
         for vertex in graph.vs: selfCostMSIMcalculate(vertex)
         
@@ -372,11 +373,16 @@ def runModel(timeSpan):
         
         for vertexNumIndex in range( len(graph.vs) ):
                 numRefsOverTime[ graph.vs[vertexNumIndex]['label'] ].append( graph.vs[vertexNumIndex]['NumRefs'] )
+                costSelfOverTime[ graph.vs[vertexNumIndex]['label'] ].append( graph.vs[vertexNumIndex]['CostSelf'] )
+                resourcesOverTime[ graph.vs[vertexNumIndex]['label'] ].append( graph.vs[vertexNumIndex]['Resources'] )
 
         
     #hijessie = numRefsOverTime.keys()   
     #pprint.pprint( zip( numRefsOverTime.keys(), [numRefsOverTime[co][0] for co in hijessie] ) )
     #print( numRefsOverTime )
+    return {'NumRefs':numRefsOverTime, 
+        'CostSelf':costSelfOverTime, 
+        'Resources':resourcesOverTime}
 
 
 
@@ -396,7 +402,10 @@ if __name__ == '__main__':
     for vertex in graph.vs:
         selfCostMSIMcalculate(vertex)
     
-    #print selfCostMSIMcalculate( graph.vs[1] )
+    results = runModel(12)
+    numRefsOverTime = results['NumRefs']
+    costSelfOverTime = results['CostSelf']
+    resourcesOverTime  = results['Resources']
     
     if 0: ## TODO: Delete after Jessie checks math!
         num = 4#50
@@ -459,10 +468,10 @@ if __name__ == '__main__':
 ####            print graph.vs[i]
 ####        
 for vertex in graph.vs :
-    vertex["size"] = int( vertex['CostSelf']*2 )
+    vertex["size"] = int( vertex['NumRefs']*.00002 )
 
-for edge in graph.es:
-    edge['width'] = edge['Cost']*10
+#for edge in graph.es:
+#    edge['width'] = edge['Cost']*10
 #    edge['name'] = str( edge['MoneyCost'] )
     
 layout = graph.layout("kk")
