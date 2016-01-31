@@ -335,8 +335,53 @@ def selfCostMSIMcalculate(vertex, update=True):
     if update==True:
         vertex['CostSelf'] = cost
     return cost
-            
+    
+    
+##Depricated gravity cost function:
+#graph.vs['CostSelf'] = [ (i**2)/.15 for i in graph.vs['natPop'] ]             
+
+
+def updateRefugeePopulations(edge):
+    popFlow = edge['PopFlow']
+    source = edge['Source']
+    target = edge['Target'] 
         
+    graph.vs[target]['NumRefs'] = graph.vs[target]['NumRefs'] + popFlow
+    graph.vs[source]['NumRefs'] = graph.vs[source]['NumRefs'] - popFlow
+
+
+def runModel(timeSpan):
+    ## Simulate n time units through model: 
+    for timeStep in range(90):
+        ## Update self cost function on each vertex:
+        for vertex in graph.vs: selfCostMSIMcalculate(vertex)
+        
+        for vertex in graph.vs:
+            resourcesCalculate(vertex)
+        
+        
+        for edge in graph.es :
+            costFuncMSIMCalculate(edge)
+            #costFuncGravityCalculate(edge)
+            popFlowCalculate(edge)
+            
+        for edge in graph.es :
+            updateRefugeePopulations(edge)
+            
+
+        
+        for vertexNumIndex in range( len(graph.vs) ):
+                numRefsOverTime[ graph.vs[vertexNumIndex]['label'] ].append( graph.vs[vertexNumIndex]['NumRefs'] )
+
+        
+    #hijessie = numRefsOverTime.keys()   
+    #pprint.pprint( zip( numRefsOverTime.keys(), [numRefsOverTime[co][0] for co in hijessie] ) )
+    #print( numRefsOverTime )
+
+
+
+
+    
 
 if __name__ == '__main__':
     timeStep = 0
@@ -370,36 +415,7 @@ if __name__ == '__main__':
 
 
 
-####    ## Simulate n time units through model: 
-####    for timeStep in range(90):
-####        ## Update self cost function on each vertex:
-####        graph.vs['CostSelf'] = [ (i**2)/.15 for i in graph.vs['natPop'] ] 
-####        
-####        for vertex in graph.vs:
-####            resourcesCalculate(vertex)
-####        
-####        
-####        for edge in graph.es :
-####            costFuncMSIMCalculate(edge)
-####            #costFuncGravityCalculate(edge)
-####            popFlowCalculate(edge)
-####            
-####        for edge in graph.es :
-####            popFlow = edge['PopFlow']
-####            source = edge['Source']
-####            target = edge['Target'] 
-####                
-####            graph.vs[target]['NumRefs'] = graph.vs[target]['NumRefs'] + popFlow
-####            graph.vs[source]['NumRefs'] = graph.vs[source]['NumRefs'] - popFlow
 
-####        
-####        for vertexNumIndex in range( len(graph.vs) ):
-####                numRefsOverTime[ graph.vs[vertexNumIndex]['label'] ].append( graph.vs[vertexNumIndex]['NumRefs'] )
-
-####        
-####    #hijessie = numRefsOverTime.keys()   
-####    #pprint.pprint( zip( numRefsOverTime.keys(), [numRefsOverTime[co][0] for co in hijessie] ) )
-####    #print( numRefsOverTime )
 
 
 ####    plotList = ['Sweden','Italy', 'Greece', 'France', 'Germany', 'UK', 'Syria']#['Turkey', 'Serbia', 'Hungary', 'Poland', 'Austria', 'France', 'UK']#['Algeria', 'Greece', 'Italy', 'Germany', 'Sweden', 'UK', 'Portugal']#['Sweden','Norway','Finland' ,'Italy', 'Austria', 'Greece', 'Syria','Poland', 'France', 'Germany', 'UK', 'Portugal']
