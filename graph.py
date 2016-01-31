@@ -191,31 +191,14 @@ def costFuncMSIMCalculate(edge, update=True):
     source = edge['Source']
     target = edge['Target']
     
-#    a = source
-#    b = target
-#    
-
-#    st = edge['Safety']
-#    resourcesS = resourcesCalculate( graph.vs[source] )
-#    efS = graph.vs[source]['NumRefs']
-#    inad = edge['Distance']
-#    c = edge['Cost']  cost for travel betweenaandb
-#    capS = graph.vs['RefCap']
-#    popS graph.vs['natPop']
-#    outnS = graph.degree( graph.vs[source] ) 
-#    
-#    if edge['TransitMethod']=='land': val = 1.0
-#    if edge['TransitMethod']=='sea': val = 0.75
-#    
-#    land(a; b):  1 if the edge is land, 0.75 if the edge is sea
-    
+    ## Set land/sea toggle value
     if edge['TransitMethod']=='land': landval = 1.0
     elif edge['TransitMethod']=='sea': landval = 0.75 
     else: print 'WARNING: No transit method defined for: ', edge
     
     if edge['TargetCo'] in COS.endCountryList():
-        ## Equation D case:
-        p1 = edge['Safety'] * \
+        ## Equation D case (end countries):
+        pt1 = edge['Safety'] * \
             graph.vs[target]['SafetyCo'] * \
             resourcesCalculate( graph.vs[target], update=False ) * \
             graph.vs[target]['NumRefs'] * \
@@ -231,8 +214,34 @@ def costFuncMSIMCalculate(edge, update=True):
             ( graph.vs[target]['NumRefs'] / \
             graph.vs[target]['RefCap'] )
         
-        val = p1 * endmult / den
+        val = pt1 * endmult / den
         edge['Cost'] = val
+        return val
+        
+        
+    elif edge['TargetCo'] in COS.transitionCoList():
+        ## Equation C case (Transition countries):
+        pt1 = edge['Safety'] * \
+            graph.vs[target]['SafetyCo'] * \
+            resourcesCalculate( graph.vs[target], update=False ) * \
+            graph.vs[target]['NumRefs'] * \
+            graph.vs[target]['natPop'] * \
+            landval
+            
+        den = edge['Distance'] * \
+            edge['MoneyCost'] * \
+            resourcesCalculate( graph.vs[source], update=False )#graph.vs[source]['Resources']
+        
+        
+        endmult = 1 - \
+            ( graph.vs[target]['NumRefs'] / \
+            graph.vs[target]['RefCap'] )
+            
+        val = pt1 * endmult / den
+        edge['Cost'] = val
+        return val
+            
+            
             
     
     
@@ -282,6 +291,10 @@ def resourcesCalculate(vertex, update=True):
     vertex['GDPHealth'] ) * 10**(-7)
     if update==True:
         vertex['Resources'] = resources
+## TODO: Delete after Jessie checks math
+#    else: print 'Hi silly.'
+#    print '^ \n  ',vertex
+#    print 'Computed resources for ', vertex['label'], ' are: ', resources
     return resources
 
     
@@ -289,8 +302,6 @@ def resourcesCalculate(vertex, update=True):
 
 if __name__ == '__main__':
     timeStep = 0
-    
-    print resourcesCalculate( graph.vs[3] )
 
     ## Simulate n time units through model: 
     for timeStep in range(90):
@@ -302,7 +313,6 @@ if __name__ == '__main__':
         
         
         for edge in graph.es :
-            print graph.vs[ edge['Target'] ]
             costFuncMSIMCalculate(edge)
             #costFuncGravityCalculate(edge)
             popFlowCalculate(edge)
