@@ -4,6 +4,7 @@ import countries as COS
 import matplotlib.pyplot as plt
 import scipy.stats as stats
 import pprint
+import tabulate
 
 
 countryDict = COS.countries()
@@ -228,8 +229,8 @@ if __name__ == '__main__':
                 numRefsOverTime[ graph.vs[vertexNumIndex]['label'] ].append( graph.vs[vertexNumIndex]['NumRefs'] )
 
         
-    hijessie = numRefsOverTime.keys()   
-    pprint.pprint( zip( numRefsOverTime.keys(), [numRefsOverTime[co][0] for co in hijessie] ) )
+    #hijessie = numRefsOverTime.keys()   
+    #pprint.pprint( zip( numRefsOverTime.keys(), [numRefsOverTime[co][0] for co in hijessie] ) )
     #print( numRefsOverTime )
 
 
@@ -269,7 +270,7 @@ if __name__ == '__main__':
         for i in range(45):
             print graph.es[i]
     
-    if 1: ## Vertexes:
+    if 0: ## Vertexes:
         for i in range(30):
             print graph.vs[i]
         
@@ -281,4 +282,37 @@ for vertex in graph.vs :
 #    edge['name'] = str( edge['MoneyCost'] )
     
 layout = graph.layout("kk")
-igraph.plot(graph, layout=layout )#,  **visual_style)
+#igraph.plot(graph, layout=layout )#,  **visual_style)
+
+
+if 0: 
+    allRows = [ ['Country Name', 'Native Population', 'Refugee Applications', 'Safety', 'GNI per capita', 'Unemployment' ] ]
+    for country in countryList:
+        row = []
+        row = row + [country]
+        row = row + [ str(nativePopulation[country])  ]
+        row = row + [ str(refugeeApplications[country]) ]
+        row = row + [ str(safetyCountries[country]) ]
+        row = row + [ str(gniCountries[country]) ]
+        row = row + [ str(unemploymentCountries[country]) ]
+        
+        allRows.append( row )
+
+
+    print tabulate.tabulate( allRows, tablefmt = 'latex')
+
+if 1: 
+    allRows = [ ['Country Name', 'Time 2', 'Time 5', 'Time 10', 'Time 20', 'Time 50' ] ]
+    for country in countryList:
+        row = []
+        row = row + [country]
+        row = row + [ '{0:.1f}'.format( numRefsOverTime[country][2])  ]
+        row = row + [ '{0:.1f}'.format(numRefsOverTime[country][5]) ]
+        row = row + [ '{0:.1f}'.format(numRefsOverTime[country][10]) ]
+        row = row + [ '{0:.1f}'.format(numRefsOverTime[country][20]) ]
+        row = row + [ '{0:.1f}'.format(numRefsOverTime[country][50]) ]
+        
+        allRows.append( row )
+
+
+    print tabulate.tabulate( allRows, tablefmt = 'latex')
