@@ -6,6 +6,7 @@ import scipy.stats as stats
 import pprint
 import tabulate
 import math
+import random
 
 
 countryDict = COS.countries()
@@ -360,6 +361,8 @@ def runModel(timeSpan):
         for vertex in graph.vs:
             resourcesCalculate(vertex)
         
+        #spontaneousPerturbations()
+        
         
         for edge in graph.es :
             costFuncMSIMCalculate(edge)
@@ -371,6 +374,7 @@ def runModel(timeSpan):
             
         for vertex in graph.vs:
             resourcesCalculate(vertex)
+            
             
 
         
@@ -387,6 +391,11 @@ def runModel(timeSpan):
         'CostSelf':costSelfOverTime, 
         'Resources':resourcesOverTime}
         
+def spontaneousPerturbations():
+    perturbed = random.randint(0, len(countryList))
+    graph.vs[perturbed]['Cost'] = 20000
+    return perturbed
+        
 
 
 
@@ -399,6 +408,8 @@ def plotResultsFromList(resultsDict, plotList, label=''):
     plt.title(label, y=1,fontsize = 15)
     plt.legend()
     plt.show()
+    
+
 
 ## Finish instanciating graph:
 #Set resources on vertexes
@@ -414,8 +425,6 @@ for vertex in graph.vs:
     
 
 if __name__ == '__main__':
-
-    
     results = runModel(12)
     numRefsOverTime = results['NumRefs']
     costSelfOverTime = results['CostSelf']
