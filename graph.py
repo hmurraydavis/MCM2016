@@ -17,7 +17,7 @@ countryList = COS.coList()
 
 
 
-graph = igraph.Graph(vertex_attrs={"label": countryList}, edges=contiguousBorders, directed=True)
+graph = igraph.Graph(vertex_attrs={"label": countryList, 'ID':range(len(countryList))}, edges=contiguousBorders, directed=True)
 for i, edge in enumerate( graph.es ):
     edge['Source']=contiguousBorders[i][0]
     edge['SourceCo']=countryList[ contiguousBorders[i][0] ]
@@ -477,7 +477,7 @@ for vertex in graph.vs:
     
 
 if __name__ == '__main__':
-    #graph.write_pickle('MCM_Graph.p')
+    graph.write_pickle('MCM_Graph.p')
     results = runModel(30)
     numRefsOverTime = results['NumRefs']
     costSelfOverTime = results['CostSelf']
