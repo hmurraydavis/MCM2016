@@ -190,6 +190,8 @@ def costFuncMSIMCalculate(edge, update=True):
     '''
     source = edge['Source']
     target = edge['Target']
+    if ( edge['Source'] == 4 ) and (edge['Target'] == 10):
+        print 'graph.py prospective: numrefs: ', graph.vs[10]['NumRefs'], '  Out of ', graph.vs[10]['RefCap']
     
     ## Set land/sea toggle value
     if edge['TransitMethod']=='land': landval = 0.75
@@ -202,7 +204,7 @@ def costFuncMSIMCalculate(edge, update=True):
                  
         if update==True:
             edge['Cost'] = val
-            edge['HMDCost'] = 100000000/float(val)
+            edge['HMDCost'] = 10000/float(val)
         return val
     
     if edge['TargetCo'] in COS.endCountryList():
@@ -234,7 +236,7 @@ def costFuncMSIMCalculate(edge, update=True):
                  
         if update==True:
             edge['Cost'] = val
-            edge['HMDCost'] = 100000000/float(val)
+            edge['HMDCost'] = 10000/float(val)
         return val        
         
     elif edge['TargetCo'] in COS.transitionCoList():
@@ -263,7 +265,7 @@ def costFuncMSIMCalculate(edge, update=True):
             edge['Cost'] = val
             if val < .0000001:
                 edge['HMDCost'] = .0000001
-            else: edge['HMDCost'] = 100000000/float(val)
+            else: edge['HMDCost'] = 10000/float(val)
         return val
             
             

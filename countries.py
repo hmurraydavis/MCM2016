@@ -836,7 +836,7 @@ def transitionCoList ():
     return ['Turkey', 'Greece', 'Bulgaria', 'Romania', 'Serbia', 'Albania', 
     'Macedonia', 'Montenegro', 'Bosnia', 'Croatia', 'Slovenia', 'Italy', 
     'Slovakia', 'Poland', 'Malta', 'Lebanon', 'Israel', 'Jordan', 'Egypt', 
-    'Libya', 'Tunisia', 'Algeria']
+    'Libya', 'Tunisia', 'Algeria', 'Czech Republic']
     
 def originCoList():
     return [ 'Syria', 'Morocco', 'Libya', 'Egypt', 'Jordan', 'Lebanon', 
