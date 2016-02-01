@@ -196,6 +196,12 @@ def costFuncMSIMCalculate(edge, update=True):
     elif edge['TransitMethod']=='sea': landval = 0.75 
     else: print 'WARNING: No transit method defined for: ', edge
     
+    if graph.vs[target]['NumRefs'] > graph.vs[target]['RefCap']:
+        val = 0
+        if update==True:
+            edge['Cost'] = val
+        return val
+    
     if edge['TargetCo'] in COS.endCountryList():
         ## Equation D case (end countries):
         pt1 = edge['Safety'] * \
@@ -207,7 +213,7 @@ def costFuncMSIMCalculate(edge, update=True):
             
         
         
-        den = ( math.log( edge['Distance'] ) + 2 ) * \
+        den = edge['Distance']**.5 *\
             edge['MoneyCost'] * \
             graph.vs[source]['Resources'] *\
             graph.vs[source]['natPop'] * \
@@ -218,7 +224,8 @@ def costFuncMSIMCalculate(edge, update=True):
             ( graph.vs[target]['NumRefs'] / \
             float( graph.vs[target]['RefCap'] ) )
         val = pt1 * endmult / den
-        edge['Cost'] = val
+        if update==True:
+            edge['Cost'] = val
         return val
         
         
@@ -240,22 +247,11 @@ def costFuncMSIMCalculate(edge, update=True):
             float( graph.vs[target]['RefCap'] ) )
             
         val = pt1 * endmult / den
-        edge['Cost'] = val
+        if update==True:
+            edge['Cost'] = val
         return val
             
             
-            
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        
-    
 def popFlowCalculate(edge, update=True):
     ''' 
     Calculate the flow of refugees along a given edge.
@@ -269,6 +265,7 @@ def popFlowCalculate(edge, update=True):
     source = edge['Source']
     target = edge['Target']  
     
+    print graph.vs[source]
     costSelf = graph.vs[source]['CostSelf']
     
     
@@ -277,8 +274,11 @@ def popFlowCalculate(edge, update=True):
     costs = [ graph.es[i]['Cost'] for i in adjacents]
     
 #    print 'costs denom: ', (sum(costs)+costSelf), '\n', graph.vs[source]
-    frac = edge['Cost']/(sum(costs)+costSelf)
-    popFlow = graph.vs[source]['NumRefs'] * frac
+    if (sum(costs)+costSelf) < .000001:
+        popFlow = 0
+    else: 
+        frac = edge['Cost']/(sum(costs)+costSelf)
+        popFlow = graph.vs[source]['NumRefs'] * frac
     #print popFlow, 'refugees from: ', edge['SourceCo'], ' to ', edge['TargetCo']
     if update == True:
         edge['PopFlow'] = popFlow
@@ -297,7 +297,11 @@ def resourcesCalculate(vertex, update=True):
         vertex['Resources'] = resources
     return resources
 
+
 def selfCostMSIMcalculate(vertex, update=True):
+#    if vertex['NumRefs'] <.0001:
+#        vertex['NumRefs'] = 1
+        
     if vertex['label'] in COS.originCoList():
         cost = .3
     else: 
@@ -311,11 +315,12 @@ def selfCostMSIMcalculate(vertex, update=True):
 
         
         ## Do the weird pi cumulitive product thing:     
-        distProd = 1
-        for distance in graph.es[adjacents]['Distance']:
-            distProd = distProd * distance
+        distSum = 1#1.15
+#        for distance in graph.es[adjacents]['Distance']:
+#            distSum = distSum + distance
+#            print 'dist is: ', distance, distSum
             
-        lnPi = math.log(distProd)
+        #lnPi = math.log(distProd)
         
         numeratorMoneySigma = sum( graph.es[adjacents]['MoneyCost'] )
         denomSafetySigma = sum( graph.es[adjacents]['Safety'] ) + \
@@ -323,8 +328,11 @@ def selfCostMSIMcalculate(vertex, update=True):
 
         denomResourceSigma = sum( adjTargets['Resources'] )
         
-        cost = n1 * distProd * numeratorMoneySigma / \
+        cost = n1 * distSum * numeratorMoneySigma / \
             vertex['RefCap'] / denomSafetySigma / denomResourceSigma
+        
+#        vertex['Jessie'] = (n1, vertex['SafetyCo'], vertex['Resources'],vertex['NumRefs']**2)
+        
     if update==True:
         vertex['CostSelf'] = cost
     return cost
@@ -348,6 +356,8 @@ def runModel(timeSpan):
     costSelfOverTime = { country:[0] for country in countryList }
     resourcesOverTime = { country:[0] for country in countryList }
     
+    greeceOuts = graph.adjacent( graph.vs[2] )
+    
     for vertexNumIndex in range( len(graph.vs) ):
         numRefsOverTime[ graph.vs[vertexNumIndex]['label'] ] = [ graph.vs[vertexNumIndex]['NumRefs'] ]
         costSelfOverTime[ graph.vs[vertexNumIndex]['label'] ] = [ graph.vs[vertexNumIndex]['CostSelf'] ] 
@@ -355,38 +365,43 @@ def runModel(timeSpan):
     
     ## Simulate n time units through model: 
     for timeStep in range(timeSpan):
-        ## Update self cost function on each vertex:
-        for vertex in graph.vs: selfCostMSIMcalculate(vertex)
         
         for vertex in graph.vs:
             resourcesCalculate(vertex)
+            
+        ## Update self cost function on each vertex:
+        for vertex in graph.vs: 
+            selfCostMSIMcalculate(vertex)
+        
         
         #spontaneousPerturbations()
         
-        
         for edge in graph.es :
             costFuncMSIMCalculate(edge)
-            #costFuncGravityCalculate(edge)
+#            costFuncGravityCalculate(edge)
+        
+        for edge in graph.es: 
+            print timeStep
             popFlowCalculate(edge)
             
         for edge in graph.es :
             updateRefugeePopulations(edge)
-            
-        for vertex in graph.vs:
-            resourcesCalculate(vertex)
-            
-            
-
         
+        ## TODO: ask Jessie if we really need this:     
+        #for vertex in graph.vs:
+        #    resourcesCalculate(vertex)
+            
+            
         for vertexNumIndex in range( len(graph.vs) ):
                 numRefsOverTime[ graph.vs[vertexNumIndex]['label'] ].append( graph.vs[vertexNumIndex]['NumRefs'] )
                 costSelfOverTime[ graph.vs[vertexNumIndex]['label'] ].append( graph.vs[vertexNumIndex]['CostSelf'] )
                 resourcesOverTime[ graph.vs[vertexNumIndex]['label'] ].append( graph.vs[vertexNumIndex]['Resources'] )
+                
+        for edge in greeceOuts:
+            print graph.es[edge]['SourceCo'], graph.es[edge]['TargetCo'], graph.es[edge]['Cost']
 
         
-    #hijessie = numRefsOverTime.keys()   
-    #pprint.pprint( zip( numRefsOverTime.keys(), [numRefsOverTime[co][0] for co in hijessie] ) )
-    #print( numRefsOverTime )
+
     return {'NumRefs':numRefsOverTime, 
         'CostSelf':costSelfOverTime, 
         'Resources':resourcesOverTime}
@@ -409,6 +424,43 @@ def plotResultsFromList(resultsDict, plotList, label=''):
     plt.legend()
     plt.show()
     
+def plotTotalAcrossCosOverTime(numRefsOverTime, label):
+    historicalNumOfRefugees = []
+    numRefs = 0
+    for timeStep in range( 20 ):  ##  len( numRefsOverTime['Greece'] )
+        for country in countryList:
+            numRefs = numRefs + numRefsOverTime[country][timeStep]
+            #print 'no refs: ', numRefs
+        
+        historicalNumOfRefugees.append(numRefs)
+        numRefs = 0
+    #print 'hist: ',historicalNumOfRefugees
+    
+    plt.plot(historicalNumOfRefugees, linewidth=9)
+    plt.title('Total '+label+' Over Time for all Countries')
+    plt.xlabel('Time', fontsize = 18)
+    plt.ylabel('Number of Refugees', fontsize = 18)
+    plt.show()
+    
+def plotsumYuck(numRefsOverTime, label):
+    historicalNumOfRefugees = []
+    numRefs = 0
+    pprint.pprint( numRefsOverTime )
+    for timeStep in range( 20 ):  ##  len( numRefsOverTime['Greece'] )
+        for country in numRefsOverTime.keys():
+            numRefs = numRefs + numRefsOverTime[country][timeStep]
+            #print 'no refs: ', numRefs
+        
+        historicalNumOfRefugees.append(numRefs)
+        numRefs = 0
+    #print 'hist: ',historicalNumOfRefugees
+    
+    plt.plot(historicalNumOfRefugees, linewidth=9)
+    plt.title('Total '+label+' Over Time for all Countries')
+    plt.xlabel('Time', fontsize = 18)
+    plt.ylabel('Number of Refugees', fontsize = 18)
+    plt.show()
+    
 
 
 ## Finish instanciating graph:
@@ -425,7 +477,8 @@ for vertex in graph.vs:
     
 
 if __name__ == '__main__':
-    results = runModel(12)
+    #graph.write_pickle('MCM_Graph.p')
+    results = runModel(30)
     numRefsOverTime = results['NumRefs']
     costSelfOverTime = results['CostSelf']
     resourcesOverTime  = results['Resources']
@@ -433,8 +486,12 @@ if __name__ == '__main__':
     plotList = ['Sweden','Denmark', 'Greece', 'France', 'Germany', 'UK', 'Syria']#['Turkey', 'Serbia', 'Hungary', 'Poland', 'Austria', 'France', 'UK']#['Algeria', 'Greece', 'Italy', 'Germany', 'Sweden', 'UK', 'Portugal']#['Sweden','Norway','Finland' ,'Italy', 'Austria', 'Greece', 'Syria','Poland', 'France', 'Germany', 'UK', 'Portugal']
         
     plotResultsFromList(numRefsOverTime, plotList, label='Number of Refugees')
-    plotResultsFromList(costSelfOverTime, plotList, label='Cost Function')
-    plotResultsFromList(resourcesOverTime, plotList, label='Resources')
+    plotResultsFromList(costSelfOverTime, plotList, label='Self Cost Function')
+#    plotResultsFromList(resourcesOverTime, plotList, label='Resources')
+    
+    plotTotalAcrossCosOverTime(numRefsOverTime, label='Number of Refugees')
+#    plotTotalAcrossCosOverTime(costSelfOverTime, label='Self Cost')
+#    plotTotalAcrossCosOverTime(resourcesOverTime, label='Resources')
     
     if 0: ## TODO: Delete after Jessie checks math!
         num = 4#50
@@ -457,23 +514,10 @@ if __name__ == '__main__':
 
 
 
-####    
-#####    historicalNumOfRefugees = []
-#####    numRefs = 0
-#####    for timestep in range( len( numRefsOverTime[country] ) ):
-#####        for country in countryList:
-#####            numRefs = numRefs + numRefsOverTime[country][timeStep]
-#####            #print 'no refs: ', numRefs
-#####        
-#####        historicalNumOfRefugees.append(numRefs)
-#####        numRefs = 0
-#####    #print 'hist: ',historicalNumOfRefugees
-####    
-####    if 0:
-####        plt.plot(historicalNumOfRefugees)
-####        plt.show()
-####        
-####            #print len( numRefsOverTime[country] )
+    
+
+        
+            #print len( numRefsOverTime[country] )
 ####    
 ####    
 ####    
@@ -486,7 +530,7 @@ if __name__ == '__main__':
 ####            print graph.vs[i]
 ####        
 for vertex in graph.vs :
-    vertex["size"] = int( vertex['NumRefs']*.00002 )
+    vertex["size"] = int( vertex['NumRefs']*.00022 )
 
 #for edge in graph.es:
 #    edge['width'] = edge['Cost']*10
