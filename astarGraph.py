@@ -11,8 +11,9 @@ import random
 graph = igraph.Graph()
 graph = graph.Read_Pickle('MCM_Graph.p')
 
-print graph
 
-for vertex in graph.vs:
-    print vertex
-    
+#temp = graph.shortest_paths_dijkstra(source=0, target=None, weights=None)
+temp2 = graph.get_shortest_paths(0, 20, weights ='Source')
+print temp2
+
+
