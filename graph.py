@@ -192,14 +192,17 @@ def costFuncMSIMCalculate(edge, update=True):
     target = edge['Target']
     
     ## Set land/sea toggle value
-    if edge['TransitMethod']=='land': landval = 1.0
-    elif edge['TransitMethod']=='sea': landval = 0.75 
+    if edge['TransitMethod']=='land': landval = 0.75
+    elif edge['TransitMethod']=='sea': landval = 1
     else: print 'WARNING: No transit method defined for: ', edge
     
+    
     if graph.vs[target]['NumRefs'] > graph.vs[target]['RefCap']:
-        val = 0
+        val = 0.00000001   
+                 
         if update==True:
             edge['Cost'] = val
+            edge['HMDCost'] = 100000000/float(val)
         return val
     
     if edge['TargetCo'] in COS.endCountryList():
@@ -224,10 +227,15 @@ def costFuncMSIMCalculate(edge, update=True):
             ( graph.vs[target]['NumRefs'] / \
             float( graph.vs[target]['RefCap'] ) )
         val = pt1 * endmult / den
+        
+        
+#        if graph.vs[target]['NumRefs'] > graph.vs[target]['RefCap']:
+#            val = 0.00000001   
+                 
         if update==True:
             edge['Cost'] = val
-        return val
-        
+            edge['HMDCost'] = 100000000/float(val)
+        return val        
         
     elif edge['TargetCo'] in COS.transitionCoList():
         ## Equation C case (Transition countries):
@@ -247,8 +255,15 @@ def costFuncMSIMCalculate(edge, update=True):
             float( graph.vs[target]['RefCap'] ) )
             
         val = pt1 * endmult / den
+#        
+#        if graph.vs[target]['NumRefs'] > graph.vs[target]['RefCap']:
+#            val = 0.00000001   
+                 
         if update==True:
             edge['Cost'] = val
+            if val < .0000001:
+                edge['HMDCost'] = .0000001
+            else: edge['HMDCost'] = 100000000/float(val)
         return val
             
             
@@ -386,10 +401,7 @@ def runModel(timeSpan):
             
         for edge in graph.es :
             updateRefugeePopulations(edge)
-        
-        ## TODO: ask Jessie if we really need this:     
-        #for vertex in graph.vs:
-        #    resourcesCalculate(vertex)
+
             
             
         for vertexNumIndex in range( len(graph.vs) ):
@@ -528,16 +540,18 @@ if __name__ == '__main__':
 ####    if 0: ## Vertexes:
 ####        for i in range(30):
 ####            print graph.vs[i]
-####        
-for vertex in graph.vs :
-    vertex["size"] = int( vertex['NumRefs']*.00022 )
+#### 
+
+       
+#for vertex in graph.vs :
+#    vertex["size"] = int( vertex['NumRefs']*.00022 )
 
 #for edge in graph.es:
 #    edge['width'] = edge['Cost']*10
 #    edge['name'] = str( edge['MoneyCost'] )
     
-layout = graph.layout("kk")
-igraph.plot(graph, layout=layout )#,  **visual_style)
+#layout = graph.layout("kk")
+#igraph.plot(graph, layout=layout )#,  **visual_style)
 
 
 ####if 0: 
