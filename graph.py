@@ -190,8 +190,7 @@ def costFuncMSIMCalculate(edge, update=True):
     '''
     source = edge['Source']
     target = edge['Target']
-    if ( edge['Source'] == 4 ) and (edge['Target'] == 10):
-        print 'graph.py prospective: numrefs: ', graph.vs[10]['NumRefs'], '  Out of ', graph.vs[10]['RefCap']
+
     
     ## Set land/sea toggle value
     if edge['TransitMethod']=='land': landval = 0.75
